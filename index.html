@@ -24,14 +24,11 @@
         }
         .slide-footer img { height:18px; opacity:0.5; }
 
-        .slide::after {
-            content:''; position:absolute; top:28px; right:48px;
-            width:28px; height:28px;
-            background:url('./assets/accucrazy-logo.webp') center/contain no-repeat;
-            opacity:0.25;
+        .slide-logo {
+            position:absolute; top:28px; right:48px;
+            height:28px; opacity:0.2;
         }
-        .title-slide::after { opacity:0; }
-        .divider::after, .dark-slide::after { filter:brightness(10); opacity:0.15; }
+        .slide-logo.light { filter:brightness(0) invert(1); opacity:0.15; }
 
         .title-slide { background:linear-gradient(135deg,#1a1a2e 0%,#16213e 50%,#0f3460 100%); color:#fff; align-items:center; text-align:center; }
         .title-slide h1 { font-size:42px; font-weight:800; line-height:1.3; max-width:900px; margin-bottom:24px; }
@@ -106,6 +103,7 @@
 
 <!-- ===== SLIDE 01 — Title ===== -->
 <section class="slide title-slide">
+    <img class="slide-logo light" src="./assets/accucrazy-logo.webp" alt="">
     <img src="./assets/accucrazy-logo.webp" alt="Accucrazy" style="height:36px;margin-bottom:28px;opacity:0.7;">
     <div class="conf">2026 Global Fashion Management Conference · Madrid</div>
     <h1>From Human Buzz to Machine Hype:<br>How Gen-AI Rewrites e-Word of Mouth<br>in Consumer Narratives</h1>
@@ -120,6 +118,7 @@
 
 <!-- ===== SLIDE 02 — Background & Research Questions ===== -->
 <section class="slide">
+    <img class="slide-logo" src="./assets/accucrazy-logo.webp" alt="">
     <span class="tag tag-purple">BACKGROUND & RESEARCH QUESTIONS</span>
     <h2 class="section-title">The Rise of <span class="accent">AI-Generated eWOM</span></h2>
     <div class="two-col">
@@ -159,6 +158,7 @@
 
 <!-- ===== SLIDE 03 — Persona Definition ===== -->
 <section class="slide">
+    <img class="slide-logo" src="./assets/accucrazy-logo.webp" alt="">
     <span class="tag tag-purple">KEY CONSTRUCT</span>
     <h2 class="section-title">Defining <span class="accent">"Persona"</span> in AI-Generated eWOM</h2>
     <div class="two-col">
@@ -203,6 +203,7 @@
 
 <!-- ===== SLIDE 04 — 8 Variables ===== -->
 <section class="slide">
+    <img class="slide-logo" src="./assets/accucrazy-logo.webp" alt="">
     <span class="tag tag-purple">CONCEPTUAL MODEL</span>
     <h2 class="section-title">Eight Variables of AI-Generated eWOM</h2>
     <div class="two-col" style="grid-template-columns:1fr 1fr;">
@@ -233,6 +234,7 @@
 
 <!-- ===== SLIDE 05 — Conceptual Diagram ===== -->
 <section class="slide">
+    <img class="slide-logo" src="./assets/accucrazy-logo.webp" alt="">
     <span class="tag tag-purple">CONCEPTUAL MODEL</span>
     <h2 class="section-title">Relationship Framework</h2>
     <div style="max-width:900px;margin:0 auto;">
@@ -262,6 +264,7 @@
 
 <!-- ===== SLIDE 06 — Section: Method ===== -->
 <section class="slide divider">
+    <img class="slide-logo light" src="./assets/accucrazy-logo.webp" alt="">
     <div class="label">Part II</div>
     <h2>Methodology</h2>
     <div class="slide-num" style="color:rgba(255,255,255,0.15)">06</div>
@@ -269,6 +272,7 @@
 
 <!-- ===== SLIDE 07 — Research Design ===== -->
 <section class="slide">
+    <img class="slide-logo" src="./assets/accucrazy-logo.webp" alt="">
     <span class="tag tag-blue">RESEARCH DESIGN</span>
     <h2 class="section-title">Dataset Overview</h2>
     <div class="stat-grid">
@@ -307,6 +311,7 @@
 
 <!-- ===== SLIDE 08 — Technical Approach: SFT ===== -->
 <section class="slide">
+    <img class="slide-logo" src="./assets/accucrazy-logo.webp" alt="">
     <span class="tag tag-red">TECHNICAL APPROACH</span>
     <h2 class="section-title">Supervised Fine-Tuning (SFT) &<br><span class="accent">Reinforcement Fine-Tuning</span></h2>
     <div class="two-col">
@@ -370,6 +375,7 @@
 
 <!-- ===== SLIDE 09 — Chain-of-Thought Training ===== -->
 <section class="slide">
+    <img class="slide-logo" src="./assets/accucrazy-logo.webp" alt="">
     <span class="tag tag-red">PROPRIETARY TECHNIQUE</span>
     <h2 class="section-title">Chain-of-Thought <span class="accent">Model Training</span></h2>
     <div class="two-col" style="align-items:center;">
@@ -421,6 +427,7 @@
 
 <!-- ===== SLIDE 10 — HITL + Coding Reliability ===== -->
 <section class="slide">
+    <img class="slide-logo" src="./assets/accucrazy-logo.webp" alt="">
     <span class="tag tag-blue">QUALITY ASSURANCE</span>
     <h2 class="section-title">Human-in-the-Loop & <span class="accent">Coding Reliability</span></h2>
     <div class="two-col">
@@ -471,6 +478,7 @@
 
 <!-- ===== SLIDE 11 — Analysis Strategy ===== -->
 <section class="slide">
+    <img class="slide-logo" src="./assets/accucrazy-logo.webp" alt="">
     <span class="tag tag-green">ANALYSIS STRATEGY</span>
     <h2 class="section-title">Statistical Methods</h2>
     <div style="max-width:850px;">
@@ -507,6 +515,7 @@
 
 <!-- ===== SLIDE 12 — Summary ===== -->
 <section class="slide dark-slide" style="background:#1a1a2e;color:#fff;align-items:center;text-align:center;">
+    <img class="slide-logo light" src="./assets/accucrazy-logo.webp" alt="">
     <div style="font-size:13px;color:rgba(255,255,255,0.3);font-weight:700;letter-spacing:0.2em;margin-bottom:20px;">SUMMARY — CONCEPT & METHOD</div>
     <h2 style="font-size:38px;font-weight:800;line-height:1.3;max-width:800px;margin-bottom:32px;">
         AI-generated eWOM is a <span style="color:#6C63FF;">new form</span> of word-of-mouth<br>
