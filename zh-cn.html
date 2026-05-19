@@ -1,0 +1,1071 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GFMC 2026 — 从人类话题到机器热议</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Noto+Serif+TC:wght@300;400;500;600;700;900&family=Noto+Sans+TC:wght@300;400;500;600;700;900&display=swap');
+
+        :root {
+            --bg: #FAF7F0;
+            --paper: #FFFFFF;
+            --ink: #1A1A1A;
+            --ink-2: #4A4A4A;
+            --ink-3: #8A8A8A;
+            --rule: #D8CFC2;
+            --rule-soft: #ECE6D8;
+            --accent: #6B2C2C;
+            --accent-soft: #C4A398;
+            --highlight: #C04A1A;
+            --font-serif: 'Crimson Pro', 'Noto Serif SC', Georgia, serif;
+            --font-sans: 'Inter', 'Noto Sans SC', -apple-system, sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+        }
+
+        * { margin:0; padding:0; box-sizing:border-box; }
+        html, body { background:#EFEAE0; }
+        body {
+            font-family:var(--font-sans);
+            color:var(--ink); font-feature-settings:'ss01','cv01','cv02';
+            -webkit-font-smoothing:antialiased;
+        }
+
+        .slide {
+            width:1280px; height:720px; margin:0 auto 28px;
+            background:var(--bg); position:relative; padding:72px 80px 64px;
+            display:flex; flex-direction:column; overflow:hidden;
+            box-shadow:0 8px 60px rgba(40,30,20,0.08);
+        }
+
+        .footer {
+            position:absolute; bottom:20px; left:72px; right:72px;
+            display:flex; justify-content:space-between; align-items:center;
+            padding-top:12px; border-top:1px solid var(--rule);
+            font-family:var(--font-mono); font-size:9px;
+            letter-spacing:0.15em; text-transform:uppercase; color:var(--ink-3);
+        }
+        .footer .pg { color:var(--ink); font-weight:600; }
+
+        h1.display, h2.display {
+            font-family:var(--font-serif); font-weight:500;
+            line-height:1.2; letter-spacing:-0.005em; color:var(--ink);
+        }
+        h1.display { font-size:48px; }
+        h2.display { font-size:38px; margin-bottom:28px; }
+        h2.display em { font-style:italic; color:var(--accent); font-weight:500; }
+        h3.subhead {
+            font-family:var(--font-sans); font-size:13px; font-weight:700;
+            letter-spacing:0.1em; color:var(--ink);
+            margin-bottom:14px;
+        }
+        h3.subhead .num {
+            font-family:var(--font-mono); color:var(--accent);
+            font-weight:600; margin-right:10px;
+        }
+
+        .lede {
+            font-family:var(--font-serif); font-size:18px; line-height:1.7;
+            color:var(--ink-2); font-weight:400; max-width:780px;
+        }
+        .lede strong { color:var(--ink); font-weight:600; }
+        .lede em { font-style:italic; color:var(--accent); }
+        .body { font-size:13px; line-height:1.7; color:var(--ink-2); }
+        .body strong { color:var(--ink); font-weight:600; }
+
+        .grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:44px; }
+        .grid-2-asym { display:grid; grid-template-columns:0.9fr 1.1fr; gap:40px; }
+        .grid-3 { display:grid; grid-template-columns:repeat(3,1fr); gap:28px; }
+
+        .rule { border:none; border-top:1px solid var(--rule); margin:24px 0; }
+        .rule-thick { border:none; border-top:2px solid var(--ink); margin:18px 0; }
+
+        .title-page {
+            background:var(--bg); display:flex; flex-direction:column;
+            justify-content:center; align-items:flex-start; padding:80px;
+        }
+        .title-page .center-block { max-width:1080px; }
+        .title-page h1 {
+            font-family:var(--font-serif); font-size:54px; line-height:1.2;
+            font-weight:500; letter-spacing:-0.01em; color:var(--ink);
+            margin-bottom:24px;
+        }
+        .title-page h1 .it { font-style:italic; color:var(--accent); font-weight:500; }
+        .title-page .subtitle {
+            font-family:var(--font-serif); font-size:18px;
+            color:var(--ink-2); line-height:1.75; max-width:880px;
+        }
+        .title-page .authors-block {
+            margin-top:36px; padding-top:18px; border-top:1px solid var(--rule);
+            display:grid; grid-template-columns:1fr 1fr; gap:32px;
+        }
+        .authors-block .author-col .label {
+            font-family:var(--font-mono); font-size:10px;
+            letter-spacing:0.25em; text-transform:uppercase; color:var(--ink-3);
+            margin-bottom:6px;
+        }
+        .authors-block .author-col .name {
+            font-family:var(--font-serif); font-size:17px; color:var(--ink);
+            font-weight:500;
+        }
+        .authors-block .author-col .aff {
+            font-size:12px; color:var(--ink-3); margin-top:2px;
+        }
+
+        .divider-page { background:var(--ink); color:var(--bg); }
+        .divider-page .footer {
+            border-top-color:rgba(250,247,240,0.3); color:rgba(250,247,240,0.5);
+        }
+        .divider-page .footer .pg { color:var(--bg); }
+        .divider-page .part-label {
+            font-family:var(--font-mono); font-size:12px;
+            letter-spacing:0.3em; text-transform:uppercase; color:var(--highlight);
+            margin-bottom:20px; margin-top:40px;
+        }
+        .divider-page h2 {
+            font-family:var(--font-serif); font-size:80px; font-weight:400;
+            line-height:1.15; color:var(--bg); letter-spacing:-0.01em;
+        }
+        .divider-page h2 em { font-style:italic; color:var(--accent-soft); font-weight:400; }
+        .divider-page .quote {
+            margin-top:48px; max-width:780px;
+            font-family:var(--font-serif); font-size:18px;
+            color:rgba(250,247,240,0.65); line-height:1.7;
+        }
+
+        .rq-block {
+            padding:16px 0; border-top:1px solid var(--ink);
+            border-bottom:1px solid var(--ink); margin:8px 0;
+            display:flex; gap:20px; align-items:flex-start;
+        }
+        .rq-block .rq-num {
+            font-family:var(--font-serif); font-style:italic; font-size:30px;
+            color:var(--accent); line-height:1; flex-shrink:0; min-width:72px;
+            font-weight:500;
+        }
+        .rq-block .rq-body {
+            font-family:var(--font-serif); font-size:15px; line-height:1.65;
+            color:var(--ink); font-weight:400;
+        }
+        .rq-block .rq-label {
+            font-family:var(--font-mono); font-size:10px;
+            letter-spacing:0.2em; text-transform:uppercase; color:var(--ink-3);
+            margin-bottom:8px; font-weight:600;
+        }
+
+        .var-list { display:flex; flex-direction:column; }
+        .var-row {
+            display:grid; grid-template-columns:40px 1fr;
+            gap:14px; padding:9px 0; border-top:1px solid var(--rule-soft);
+            align-items:baseline;
+        }
+        .var-row:last-child { border-bottom:1px solid var(--rule-soft); }
+        .var-row .vn {
+            font-family:var(--font-mono); font-size:12px; font-weight:600;
+            color:var(--accent); letter-spacing:0.05em; padding-top:3px;
+        }
+        .var-row .vtitle {
+            font-family:var(--font-serif); font-size:16px; font-weight:600;
+            color:var(--ink); margin-bottom:2px; line-height:1.4;
+        }
+        .var-row .vdesc {
+            font-size:12px; line-height:1.6; color:var(--ink-2);
+        }
+        .var-list.classic .vn { color:var(--ink); }
+        .var-list.extended .vn { color:var(--accent); }
+
+        .flow { position:relative; padding-left:24px; }
+        .flow::before {
+            content:''; position:absolute; left:7px; top:14px; bottom:14px;
+            width:1px; background:var(--rule);
+        }
+        .flow-item { position:relative; padding:10px 0 10px 16px; }
+        .flow-item:not(:last-child) { border-bottom:1px dashed var(--rule-soft); }
+        .flow-item::before {
+            content:''; position:absolute; left:-22px; top:20px;
+            width:13px; height:13px; border-radius:50%;
+            background:var(--bg); border:2px solid var(--accent);
+        }
+        .flow-item.final::before {
+            background:var(--accent); border-color:var(--accent);
+        }
+        .flow-item .step-label {
+            font-family:var(--font-sans); font-size:11px; font-weight:700;
+            letter-spacing:0.05em; color:var(--ink); margin-bottom:4px;
+        }
+        .flow-item .step-label .en {
+            font-family:var(--font-mono); font-size:9px; font-weight:500;
+            color:var(--ink-3); letter-spacing:0.15em; text-transform:uppercase;
+            margin-right:8px;
+        }
+        .flow-item .step-example {
+            font-family:var(--font-serif); font-size:13px;
+            color:var(--ink-2); line-height:1.7;
+            padding:6px 12px; border-left:2px solid var(--rule);
+            background:rgba(216,207,194,0.18);
+        }
+        .flow-item.final .step-example {
+            border-left-color:var(--accent); color:var(--ink);
+            background:rgba(107,44,44,0.06);
+        }
+
+        table.editorial { width:100%; border-collapse:collapse; font-size:13px; }
+        table.editorial thead th {
+            text-align:left; font-family:var(--font-mono);
+            font-size:9px; letter-spacing:0.18em; text-transform:uppercase;
+            color:var(--ink-3); font-weight:600; padding:0 12px 8px 0;
+            border-bottom:2px solid var(--ink);
+        }
+        table.editorial thead th.num-col { text-align:right; }
+        table.editorial tbody td {
+            padding:9px 12px 9px 0; border-bottom:1px solid var(--rule-soft);
+            color:var(--ink-2); line-height:1.6;
+        }
+        table.editorial tbody td.var-name {
+            font-family:var(--font-serif); font-size:15px; font-weight:600;
+            color:var(--ink);
+        }
+        table.editorial tbody td.num-cell {
+            font-family:var(--font-mono); font-size:14px; font-weight:600;
+            color:var(--accent); text-align:right;
+        }
+        table.editorial tbody td.note { font-size:13px; color:var(--ink-3); }
+        table.editorial tbody tr.highlight td { background:rgba(192,74,26,0.04); }
+        table.editorial tbody tr.highlight td.num-cell { color:var(--highlight); font-size:18px; }
+
+        .figure-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:0; }
+        .figure-cell { padding:22px 22px 20px; border-right:1px solid var(--rule); }
+        .figure-cell:last-child { border-right:none; }
+        .figure-cell .fig-num {
+            font-family:var(--font-serif); font-size:52px; font-weight:500;
+            color:var(--ink); line-height:1; letter-spacing:-0.02em;
+        }
+        .figure-cell .fig-unit {
+            font-family:var(--font-mono); font-size:11px;
+            letter-spacing:0.15em; text-transform:uppercase; color:var(--accent);
+            margin-top:12px;
+        }
+        .figure-cell .fig-desc {
+            font-size:13px; line-height:1.7; color:var(--ink-2); margin-top:8px;
+        }
+
+        .sector-bar {
+            display:flex; height:42px; border:1px solid var(--ink);
+            font-family:var(--font-sans); font-size:11px; font-weight:600;
+        }
+        .sector-bar > div {
+            display:flex; align-items:center; justify-content:center;
+            color:var(--bg); letter-spacing:0.03em; text-align:center; padding:0 8px;
+        }
+        .sector-bar .s-fashion { background:var(--ink); flex:222; }
+        .sector-bar .s-beauty { background:var(--accent); flex:408; }
+        .sector-bar .s-3c { background:var(--highlight); flex:370; }
+        .sector-meta {
+            display:flex; margin-top:8px; font-family:var(--font-mono);
+            font-size:10px; color:var(--ink-3); letter-spacing:0.1em;
+        }
+        .sector-meta > div { text-align:center; }
+        .sector-meta .m-fashion { flex:222; }
+        .sector-meta .m-beauty { flex:408; }
+        .sector-meta .m-3c { flex:370; }
+
+        .alpha-figs { display:grid; grid-template-columns:repeat(4,1fr); }
+        .alpha-fig {
+            padding:14px 12px; border-right:1px solid var(--rule-soft);
+            border-bottom:1px solid var(--rule-soft);
+        }
+        .alpha-fig:nth-child(4n) { border-right:none; }
+        .alpha-fig:nth-last-child(-n+4) { border-bottom:none; }
+        .alpha-fig .a-name {
+            font-family:var(--font-sans); font-size:11px; font-weight:600;
+            color:var(--ink-3); letter-spacing:0.05em;
+            margin-bottom:4px;
+        }
+        .alpha-fig .a-val {
+            font-family:var(--font-serif); font-size:22px; font-weight:600;
+            color:var(--ink); line-height:1;
+        }
+        .alpha-fig.good .a-val { color:var(--accent); }
+
+        .pillar-row {
+            display:grid; grid-template-columns:54px 1fr;
+            gap:20px; padding:14px 0; border-top:1px solid var(--rule-soft);
+            align-items:start;
+        }
+        .pillar-row:last-of-type { border-bottom:1px solid var(--rule-soft); }
+        .pillar-row .p-num {
+            font-family:var(--font-mono); font-size:18px;
+            font-weight:600; color:var(--accent); line-height:1; padding-top:4px;
+            letter-spacing:0.02em;
+        }
+        .pillar-row h4 {
+            font-family:var(--font-serif); font-size:18px; font-weight:600;
+            color:var(--ink); margin-bottom:4px; line-height:1.4;
+        }
+        .pillar-row p { font-size:13px; line-height:1.7; color:var(--ink-2); }
+
+        .aside {
+            border-left:3px solid var(--accent); padding:12px 18px;
+            background:rgba(107,44,44,0.04);
+            font-family:var(--font-serif); font-size:14px; line-height:1.7;
+            color:var(--ink); margin:14px 0;
+        }
+        .aside strong { font-weight:600; }
+        .aside .aside-label {
+            font-family:var(--font-mono); font-size:10px; font-weight:600;
+            letter-spacing:0.2em; text-transform:uppercase; color:var(--accent);
+            margin-bottom:6px; display:block;
+        }
+
+        .workflow {
+            display:flex; align-items:stretch; border:1px solid var(--ink);
+        }
+        .workflow .wf-step {
+            flex:1; padding:14px 14px; border-right:1px solid var(--ink);
+            text-align:center; background:var(--paper);
+        }
+        .workflow .wf-step:last-child { border-right:none; background:var(--ink); color:var(--bg); }
+        .workflow .wf-step .wf-num {
+            font-family:var(--font-mono); font-size:10px;
+            letter-spacing:0.2em; color:var(--ink-3); margin-bottom:6px;
+        }
+        .workflow .wf-step:last-child .wf-num { color:rgba(250,247,240,0.5); }
+        .workflow .wf-step .wf-title {
+            font-family:var(--font-serif); font-size:16px; font-weight:600;
+            color:var(--ink);
+        }
+        .workflow .wf-step:last-child .wf-title { color:var(--bg); }
+        .workflow .wf-step .wf-sub {
+            font-size:11px; color:var(--ink-3); margin-top:3px;
+            font-family:var(--font-mono); letter-spacing:0.05em;
+        }
+        .workflow .wf-step:last-child .wf-sub { color:rgba(250,247,240,0.6); }
+
+        .takeaway {
+            display:flex; gap:18px; padding:12px 0;
+            border-top:1px solid var(--rule-soft); align-items:flex-start;
+        }
+        .takeaway:last-of-type { border-bottom:1px solid var(--rule-soft); }
+        .takeaway .t-num {
+            font-family:var(--font-serif); font-style:italic; font-size:28px;
+            color:var(--accent); line-height:1; flex-shrink:0; min-width:36px;
+        }
+        .takeaway .t-body {
+            font-family:var(--font-serif); font-size:15px; line-height:1.7;
+            color:var(--ink-2);
+        }
+        .takeaway .t-body strong { color:var(--ink); font-weight:600; }
+
+        .cite {
+            font-size:11px; color:var(--ink-3);
+            font-family:var(--font-serif);
+        }
+    </style>
+</head>
+<body>
+
+<!-- ===== SLIDE 01 — Title ===== -->
+<section class="slide title-page">
+    <div class="center-block">
+        <h1>从人类话题到<span class="it">机器热议</span><br>生成式 AI 如何改写消费者叙事中的电子口碑</h1>
+        <div class="subtitle">
+            探讨由人设驱动的 AI 生成电子口碑（eWOM）<br>
+            在时尚、美妆、一般消费品 / 消费性电子三大产业中的特征。
+        </div>
+        <div class="authors-block">
+            <div class="author-col">
+                <div class="label">Authors</div>
+                <div class="name">吴士嘉 · 曹雅洁</div>
+                <div class="aff">香港中文大学</div>
+            </div>
+            <div class="author-col">
+                <div class="label">Co-authors</div>
+                <div class="name">吴维翰 · 谢凯泓</div>
+                <div class="aff">Accucrazy · 台北，台湾</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== SLIDE 02 — Background & Research Questions ===== -->
+<section class="slide">
+    <h2 class="display">AI 生成电子口碑的<em>崛起。</em></h2>
+
+    <div class="grid-2-asym">
+        <div>
+            <p class="lede">
+                电子口碑在美国是品牌发现的<strong>首要来源</strong>，在英国与德国亦名列前三。一种新形态正在出现——品牌运用社群聆听与消费者情绪数据，产出带有<em>预设人设</em>的 AI 生成电子口碑。
+            </p>
+
+            <hr class="rule" style="margin:28px 0 18px;">
+
+            <div class="grid-2" style="gap:24px;">
+                <div>
+                    <h3 class="subhead"><span class="num">A.</span>传统电子口碑</h3>
+                    <p class="body">消费者自发性的评论、用户生成内容（UGC）、以及个体间的意见分享。</p>
+                </div>
+                <div>
+                    <h3 class="subhead"><span class="num">B.</span>AI 生成电子口碑 <span style="color:var(--highlight);font-weight:700;">— 新形态</span></h3>
+                    <p class="body">由人设驱动、以真实消费者数据为基础的合成内容——同时扮演发文者与留言者。</p>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <div class="rq-block">
+                <div class="rq-num">RQ¹</div>
+                <div>
+                    <div class="rq-label">研究问题一</div>
+                    <div class="rq-body">从既有的电子口碑属性出发，AI 生成电子口碑具备哪些<strong>独特特征</strong>？</div>
+                </div>
+            </div>
+            <div class="rq-block">
+                <div class="rq-num">RQ²</div>
+                <div>
+                    <div class="rq-label">研究问题二</div>
+                    <div class="rq-body">在<strong>时尚</strong>与其他产业中，AI 生成电子口碑出现了哪些<strong>新兴变项</strong>？</div>
+                </div>
+            </div>
+
+            <div class="aside" style="margin-top:28px;">
+                <span class="aside-label">概念架构</span>
+                我们以<strong>信息量、可信度、情感倾向</strong>为基础，并延伸纳入：<strong>分析性思维、真实性、原创性、产品评价、人设</strong>共八项变项。
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <span>From Human Buzz to Machine Hype</span>
+        <span class="pg">02 / 13</span>
+    </div>
+</section>
+
+<!-- ===== SLIDE 03 — Persona Definition ===== -->
+<section class="slide">
+    <h2 class="display">定义 AI 生成电子口碑中的<em>"人设"。</em></h2>
+
+    <div class="grid-2-asym">
+        <div>
+            <p class="lede">
+                <strong>人设（Persona）</strong>不应被视为人类身份，而是一个<em>连贯的合成框架</em>，由三个维度构成：
+            </p>
+            <hr class="rule" style="margin:24px 0 14px;">
+
+            <div class="var-list">
+                <div class="var-row">
+                    <div class="vn">i.</div>
+                    <div>
+                        <div class="vtitle">特定特质</div>
+                        <div class="vdesc">角色声音、语气、个性。</div>
+                    </div>
+                </div>
+                <div class="var-row">
+                    <div class="vn">ii.</div>
+                    <div>
+                        <div class="vtitle">专业边界</div>
+                        <div class="vdesc">领域知识的范畴与限制。</div>
+                    </div>
+                </div>
+                <div class="var-row">
+                    <div class="vn">iii.</div>
+                    <div>
+                        <div class="vtitle">行为模式</div>
+                        <div class="vdesc">一致的回应风格与互动逻辑。</div>
+                    </div>
+                </div>
+            </div>
+            <p class="cite" style="margin-top:14px;">Shanahan et al., 2023; Wan et al., 2025.</p>
+        </div>
+
+        <div>
+            <h3 class="subhead" style="margin-bottom:4px;">实例展示 — <span style="color:var(--accent);">截取自数据集</span></h3>
+            <p style="font-family:var(--font-serif);font-size:12px;color:var(--ink-3);margin-bottom:14px;">
+                美妆保养类目 · 杏仁酸保养品 · 品牌名匿名。
+            </p>
+
+            <div class="flow">
+                <div class="flow-item">
+                    <div class="step-label"><span class="en">Step 01</span>情境引导</div>
+                    <div class="step-example">产品定位——将杏仁酸保养品包装在<em>"历经多年盲目消费后回归极简保养"</em>的叙事框架中。</div>
+                </div>
+                <div class="flow-item">
+                    <div class="step-label"><span class="en">Step 02</span>领域知识注入</div>
+                    <div class="step-example">杏仁酸 · AHA / BHA / 视黄醇之区辨 · 油脂与粉刺调理 · "精炼货架"的叙事框架。</div>
+                </div>
+                <div class="flow-item">
+                    <div class="step-label"><span class="en">Step 03</span>对话提示的角色扮演</div>
+                    <div class="step-example">Dcard 自白式语气 · 二十多岁保养观念转变者 · 旅程序叙事 · 节制使用 emoji。</div>
+                </div>
+                <div class="flow-item final">
+                    <div class="step-label"><span class="en">Output</span>独特的数字叙事 · 品牌 → 消费者</div>
+                    <div class="step-example">"#分享 — 保养这么多年，留下来的就只有杏仁酸＋保湿。曾经以为<em>贵才有效</em>。几年下来，我每个月只回购三样：一支保湿精华、一支杏仁酸、一支乳霜——绕了一圈又回到基本款。"</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <span>From Human Buzz to Machine Hype</span>
+        <span class="pg">03 / 13</span>
+    </div>
+</section>
+
+<!-- ===== SLIDE 04 — Eight Variables ===== -->
+<section class="slide">
+    <h2 class="display">AI 生成电子口碑的<em>八项变项。</em></h2>
+
+    <div class="grid-2" style="gap:56px;">
+        <div>
+            <h3 class="subhead"><span class="num">I.</span>承袭自既有电子口碑文献</h3>
+            <hr class="rule-thick" style="margin:0 0 4px;">
+            <div class="var-list classic">
+                <div class="var-row">
+                    <div class="vn">01</div>
+                    <div>
+                        <div class="vtitle">信息量　Message Volume</div>
+                        <div class="vdesc">品牌相关信息的份量；决定能见度与认知处理潜能。</div>
+                    </div>
+                </div>
+                <div class="var-row">
+                    <div class="vn">02</div>
+                    <div>
+                        <div class="vtitle">可信度　Credibility</div>
+                        <div class="vdesc">信息来源被感知到的可信赖、专业与诚实程度。</div>
+                    </div>
+                </div>
+                <div class="var-row">
+                    <div class="vn">03</div>
+                    <div>
+                        <div class="vtitle">情感倾向　Valence</div>
+                        <div class="vdesc">对品牌的情感态度——正向、负向或混合。</div>
+                    </div>
+                </div>
+            </div>
+            <p class="cite" style="margin-top:14px;">Mehrabian &amp; Russell, 1974; Petty &amp; Cacioppo, 1986; Hung et al., 2023.</p>
+        </div>
+
+        <div>
+            <h3 class="subhead"><span class="num">II.</span>为 AI 生成电子口碑而延伸</h3>
+            <hr class="rule-thick" style="margin:0 0 4px;">
+            <div class="var-list extended">
+                <div class="var-row">
+                    <div class="vn">04</div>
+                    <div>
+                        <div class="vtitle">分析性思维　Analytical Thinking</div>
+                        <div class="vdesc">表达中的逻辑性、严谨度与层级组织。</div>
+                    </div>
+                </div>
+                <div class="var-row">
+                    <div class="vn">05</div>
+                    <div>
+                        <div class="vtitle">真实性　Authenticity</div>
+                        <div class="vdesc">文本中所传达的<em>"个人真实经验感"</em>。</div>
+                    </div>
+                </div>
+                <div class="var-row">
+                    <div class="vn">06</div>
+                    <div>
+                        <div class="vtitle">原创性　Originality</div>
+                        <div class="vdesc">独特、非重复、不流于样板化的内容。</div>
+                    </div>
+                </div>
+                <div class="var-row">
+                    <div class="vn">07</div>
+                    <div>
+                        <div class="vtitle">产品评价　Product Evaluation</div>
+                        <div class="vdesc">对品质、设计、性价比的具体评估。</div>
+                    </div>
+                </div>
+                <div class="var-row">
+                    <div class="vn">08</div>
+                    <div>
+                        <div class="vtitle">人设　Persona</div>
+                        <div class="vdesc">连贯的合成身份——特质、专业、行为模式。</div>
+                    </div>
+                </div>
+            </div>
+            <p class="cite" style="margin-top:14px;">Pennebaker et al., 2014; Boardman et al., 2022; Shanahan et al., 2023.</p>
+        </div>
+    </div>
+
+    <div class="footer">
+        <span>From Human Buzz to Machine Hype</span>
+        <span class="pg">04 / 13</span>
+    </div>
+</section>
+
+<!-- ===== SLIDE 05 — Relationship Framework ===== -->
+<section class="slide">
+    <h2 class="display">变项之间如何<em>互相支撑。</em></h2>
+
+    <div class="grid-2" style="gap:48px;">
+        <div>
+            <h3 class="subhead">表一　双变项相关系数 — 与真实性</h3>
+            <table class="editorial">
+                <thead>
+                    <tr><th>变项</th><th class="num-col">r</th><th class="num-col">关联强度</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td class="var-name">原创性</td><td class="num-cell">.63 ***</td><td class="num-cell note">强</td></tr>
+                    <tr><td class="var-name">人设</td><td class="num-cell">.50 ***</td><td class="num-cell note">强</td></tr>
+                    <tr><td class="var-name">产品评价</td><td class="num-cell">.45 ***</td><td class="num-cell note">中</td></tr>
+                </tbody>
+            </table>
+
+            <h3 class="subhead" style="margin-top:32px;">表二　其他显著关联</h3>
+            <table class="editorial">
+                <tbody>
+                    <tr><td class="var-name">产品评价 ↔ 信息量</td><td class="num-cell">r = .63 ***</td></tr>
+                    <tr><td class="var-name">原创性 ↔ 人设</td><td class="num-cell">r = .57 ***</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div>
+            <h3 class="subhead">表三　预测真实性的多元回归</h3>
+            <table class="editorial">
+                <thead>
+                    <tr><th>预测变项</th><th class="num-col">β</th><th class="num-col">p</th></tr>
+                </thead>
+                <tbody>
+                    <tr class="highlight"><td class="var-name">原创性</td><td class="num-cell">.46</td><td class="num-cell note">&lt; .001</td></tr>
+                    <tr><td class="var-name">产品评价</td><td class="num-cell">.21</td><td class="num-cell note">&lt; .001</td></tr>
+                    <tr><td class="var-name">情感倾向</td><td class="num-cell">.12</td><td class="num-cell note">&lt; .001</td></tr>
+                    <tr><td class="var-name">可信度</td><td class="num-cell">.12</td><td class="num-cell note">&lt; .001</td></tr>
+                </tbody>
+            </table>
+
+            <div class="aside" style="margin-top:24px;">
+                <span class="aside-label">产业显著性</span>
+                在<strong>时尚</strong>产业中，人设与分析性思维的分数高于美妆——驱动更深层的叙事互动。
+            </div>
+
+            <p class="cite" style="margin-top:12px;">*** p &lt; .001 · 全部八项变项皆为正相关。</p>
+        </div>
+    </div>
+
+    <div class="footer">
+        <span>From Human Buzz to Machine Hype</span>
+        <span class="pg">05 / 13</span>
+    </div>
+</section>
+
+<!-- ===== SLIDE 06 — Divider: Methodology ===== -->
+<section class="slide divider-page">
+    <div class="part-label">— 第 II 部 —</div>
+    <h2><em>研究方法</em></h2>
+    <p class="quote">
+        "本研究中的每一篇贴文，皆经过严谨的人类循环（HITL）验证流程，以确保品质与真实性。"
+    </p>
+
+    <div class="footer">
+        <span>第 II 部即将展开</span>
+        <span class="pg">06 / 13</span>
+    </div>
+</section>
+
+<!-- ===== SLIDE 07 — Research Design ===== -->
+<section class="slide">
+    <h2 class="display">数据集概览。</h2>
+
+    <div class="figure-grid" style="border-top:2px solid var(--ink);border-bottom:1px solid var(--rule);">
+        <div class="figure-cell">
+            <div class="fig-num">997</div>
+            <div class="fig-unit">贴文与回文</div>
+            <div class="fig-desc">经 AI 生成、完整分析——母体普查，并非抽样。</div>
+        </div>
+        <div class="figure-cell">
+            <div class="fig-num">3</div>
+            <div class="fig-unit">产业类目</div>
+            <div class="fig-desc">时尚 · 美妆与保养 · 一般消费品 / 消费性电子。</div>
+        </div>
+        <div class="figure-cell">
+            <div class="fig-num">3</div>
+            <div class="fig-unit">平台</div>
+            <div class="fig-desc">Threads · Facebook 社团 · Dcard 匿名论坛。</div>
+        </div>
+    </div>
+
+    <div class="grid-2" style="margin-top:36px;gap:48px;">
+        <div>
+            <h3 class="subhead">产业分布</h3>
+            <div class="sector-bar">
+                <div class="s-fashion">时尚 · 22.2%</div>
+                <div class="s-beauty">美妆与保养 · 40.8%</div>
+                <div class="s-3c">一般消费品 / 消费性电子 · 37.0%</div>
+            </div>
+            <div class="sector-meta">
+                <div class="m-fashion">n ≈ 222</div>
+                <div class="m-beauty">n ≈ 408</div>
+                <div class="m-3c">n ≈ 370</div>
+            </div>
+        </div>
+        <div>
+            <h3 class="subhead">数据源</h3>
+            <p class="body">
+                完全采用<strong>专有、经人类验证的电子口碑数据库</strong>，源自高性能行销实战场域——排除自然消息杂讯。所有 997 篇贴文皆于 2025 年在台湾<strong>实际商业营运中部署</strong>。
+            </p>
+        </div>
+    </div>
+
+    <div class="footer">
+        <span>From Human Buzz to Machine Hype</span>
+        <span class="pg">07 / 13</span>
+    </div>
+</section>
+
+<!-- ===== SLIDE 08 — SFT ===== -->
+<section class="slide">
+    <h2 class="display">监督式 &amp; <em>强化式微调。</em></h2>
+
+    <div class="grid-2-asym">
+        <div>
+            <p class="lede">
+                本研究的 AI 生成电子口碑，采用严谨的 <strong>SFT 管线</strong>并结合强化学习产出——<em>非</em>单纯的提示工程。
+            </p>
+            <hr class="rule" style="margin:20px 0 6px;">
+
+            <div class="var-list">
+                <div class="var-row">
+                    <div class="vn">01</div>
+                    <div>
+                        <div class="vtitle">专有数据</div>
+                        <div class="vdesc">经人类验证的内部行销实战电子口碑数据库——排除自然消息杂讯。</div>
+                    </div>
+                </div>
+                <div class="var-row">
+                    <div class="vn">02</div>
+                    <div>
+                        <div class="vtitle">内化</div>
+                        <div class="vdesc">未经验证的洞察以内化方式处理，不直接引用——确保原创性合成。</div>
+                    </div>
+                </div>
+                <div class="var-row">
+                    <div class="vn">03</div>
+                    <div>
+                        <div class="vtitle">通用化</div>
+                        <div class="vdesc">跨品牌、跨类目的调适能力，并维持人设一致性。</div>
+                    </div>
+                </div>
+                <div class="var-row">
+                    <div class="vn">04</div>
+                    <div>
+                        <div class="vtitle">策略标注</div>
+                        <div class="vdesc"><em>潜在的写作策略与战术角度</em>编码为训练信号——学会隐性的说服模式。</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <h3 class="subhead">SFT 与提示工程之差异</h3>
+            <hr class="rule-thick" style="margin:0 0 18px;">
+
+            <div style="padding:18px 22px;border:1px solid var(--rule);background:var(--paper);">
+                <div style="font-family:var(--font-mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--ink-3);margin-bottom:6px;">仅有提示工程</div>
+                <p style="font-family:var(--font-serif);font-size:15px;line-height:1.7;color:var(--ink-2);">
+                    产出泛化、人设不一致、领域深度有限。
+                </p>
+            </div>
+
+            <div style="text-align:center;font-family:var(--font-mono);font-size:11px;color:var(--ink-3);letter-spacing:0.2em;margin:10px 0;">vs.</div>
+
+            <div style="padding:18px 22px;border:1px solid var(--accent);background:var(--paper);position:relative;">
+                <div style="position:absolute;top:-9px;left:18px;background:var(--bg);padding:0 8px;font-family:var(--font-mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--accent);font-weight:700;">本研究做法</div>
+                <div style="font-family:var(--font-mono);font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--accent);margin-bottom:6px;font-weight:600;">SFT + 强化式微调</div>
+                <p style="font-family:var(--font-serif);font-size:15px;line-height:1.7;color:var(--ink);">
+                    人设一致、领域感知、媲美人类品质，并由 <strong>HITL</strong> 验证。
+                </p>
+            </div>
+
+            <div class="aside" style="margin-top:24px;">
+                <span class="aside-label">商业实证</span>
+                所有 997 篇贴文皆部署于<strong>真实商业营运</strong>——非学术原型。
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <span>From Human Buzz to Machine Hype</span>
+        <span class="pg">08 / 13</span>
+    </div>
+</section>
+
+<!-- ===== SLIDE 09 — CoT Training ===== -->
+<section class="slide">
+    <h2 class="display">思维链 (CoT) <em>模型训练。</em></h2>
+
+    <div class="grid-2-asym" style="align-items:center;">
+        <div>
+            <p class="lede">
+                本研究专有的 CoT 训练法，将生成过程结构化为<em>三大支柱</em>——模型在产出前须先逐一推理思考。
+            </p>
+
+            <div style="margin-top:18px;">
+                <div class="pillar-row">
+                    <div class="p-num">01</div>
+                    <div>
+                        <h4>产品信息　Product Info</h4>
+                        <p>结构化的产品属性、定价、定位与竞品脉络。</p>
+                    </div>
+                </div>
+                <div class="pillar-row">
+                    <div class="p-num">02</div>
+                    <div>
+                        <h4>作者人设　Author's Persona</h4>
+                        <p>预先定义的特质、语气、专业层级与行为一致性。</p>
+                    </div>
+                </div>
+                <div class="pillar-row">
+                    <div class="p-num">03</div>
+                    <div>
+                        <h4>叙事线　Storyline</h4>
+                        <p>衔接品牌宣传与消费者自然接受度的<em>策略性桥梁</em>。</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="aside">
+                <span class="aside-label">为什么这很重要</span>
+                模型学会<strong>逐一推理</strong>三大支柱后才生成——而非只是表面文本的样板匹配。
+            </div>
+        </div>
+
+        <figure style="margin:0;">
+            <div style="border:1px solid var(--rule);background:var(--paper);padding:16px;">
+                <img src="./assets/cot_training.png" alt="思维链模型训练架构" style="width:100%;display:block;">
+            </div>
+            <figcaption class="cite" style="margin-top:10px;text-align:center;">
+                图一　专有的 CoT 训练架构 · © Accucrazy
+            </figcaption>
+        </figure>
+    </div>
+
+    <div class="footer">
+        <span>From Human Buzz to Machine Hype</span>
+        <span class="pg">09 / 13</span>
+    </div>
+</section>
+
+<!-- ===== SLIDE 10 — HITL & Coding Reliability ===== -->
+<section class="slide">
+    <h2 class="display">人类循环 &amp; <em>编码信度。</em></h2>
+
+    <div class="grid-2" style="gap:48px;">
+        <div>
+            <h3 class="subhead">验证流程</h3>
+            <div class="workflow">
+                <div class="wf-step">
+                    <div class="wf-num">01</div>
+                    <div class="wf-title">AI 生成</div>
+                    <div class="wf-sub">SFT + CoT</div>
+                </div>
+                <div class="wf-step">
+                    <div class="wf-num">02</div>
+                    <div class="wf-title">人工审阅</div>
+                    <div class="wf-sub">Review</div>
+                </div>
+                <div class="wf-step">
+                    <div class="wf-num">03</div>
+                    <div class="wf-title">回馈</div>
+                    <div class="wf-sub">Reinforce</div>
+                </div>
+                <div class="wf-step">
+                    <div class="wf-num">04</div>
+                    <div class="wf-title">实际部署</div>
+                    <div class="wf-sub">Live</div>
+                </div>
+            </div>
+
+            <div class="grid-2" style="margin-top:28px;gap:24px;">
+                <div>
+                    <h3 class="subhead">母体普查</h3>
+                    <p class="body">所有市场可用的 AI 生成电子口碑之<strong>完整集合</strong>——非抽样样本。</p>
+                </div>
+                <div>
+                    <h3 class="subhead">贴文 + 回文</h3>
+                    <p class="body">两者皆从<strong>合成沟通</strong>的观点整体分析。</p>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <h3 class="subhead">编码者间信度 — Krippendorff α</h3>
+            <p style="font-family:var(--font-serif);font-size:13px;color:var(--ink-3);margin-bottom:14px;">
+                三轮编码者训练 · 两位受训人类编码者 · 全部 997 篇贴文。
+            </p>
+
+            <div class="alpha-figs" style="border:1px solid var(--rule-soft);">
+                <div class="alpha-fig good"><div class="a-name">原创性</div><div class="a-val">.857</div></div>
+                <div class="alpha-fig good"><div class="a-name">情感倾向</div><div class="a-val">.800</div></div>
+                <div class="alpha-fig good"><div class="a-name">信息量</div><div class="a-val">.790</div></div>
+                <div class="alpha-fig"><div class="a-name">分析性</div><div class="a-val">.693</div></div>
+                <div class="alpha-fig"><div class="a-name">可信度</div><div class="a-val">.690</div></div>
+                <div class="alpha-fig"><div class="a-name">真实性</div><div class="a-val">.687</div></div>
+                <div class="alpha-fig"><div class="a-name">人设</div><div class="a-val">.661</div></div>
+                <div class="alpha-fig"><div class="a-name">产品评价</div><div class="a-val">.607</div></div>
+            </div>
+
+            <div style="display:flex;gap:20px;margin-top:12px;font-family:var(--font-mono);font-size:10px;letter-spacing:0.05em;color:var(--ink-3);">
+                <span><span style="color:var(--accent);font-weight:700;">●</span>&nbsp; ≥ .750 优异</span>
+                <span><span style="color:var(--ink);font-weight:700;">●</span>&nbsp; ≥ .600 可接受</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <span>From Human Buzz to Machine Hype</span>
+        <span class="pg">10 / 13</span>
+    </div>
+</section>
+
+<!-- ===== SLIDE 11 — Statistical Methods ===== -->
+<section class="slide">
+    <h2 class="display">统计分析方法。</h2>
+
+    <div style="max-width:980px;">
+        <div class="pillar-row" style="border-top-color:var(--ink);border-top-width:2px;">
+            <div class="p-num">01</div>
+            <div>
+                <h4>双变项 Pearson 相关分析　Bivariate Pearson Correlations</h4>
+                <p>查看八项主要变项间的成对相关 → 辨识消息特征之间的互联本质。</p>
+            </div>
+        </div>
+        <div class="pillar-row">
+            <div class="p-num">02</div>
+            <div>
+                <h4>多元线性回归　Multiple Linear Regression</h4>
+                <p>预测<strong>真实性</strong> → 原创性 (β = .46)、产品评价 (β = .21)、情感倾向 (β = .12)、可信度 (β = .12)。</p>
+            </div>
+        </div>
+        <div class="pillar-row">
+            <div class="p-num">03</div>
+            <div>
+                <h4>单因子变异数分析　One-Way ANOVA</h4>
+                <p><strong>三大产业</strong>（时尚 / 美妆 / 一般消费品）在八项变项上的差异。</p>
+            </div>
+        </div>
+
+        <div class="aside" style="margin-top:28px;border-left-color:var(--highlight);background:rgba(192,74,26,0.05);">
+            <span class="aside-label" style="color:var(--highlight);">讨论注记 — 情境性数据镜映</span>
+            时尚与一般消费品中较低的分数，反映<em>真实世界的社群媒体动态</em>——是该市场本身的互动基准，<strong>并非模型限制</strong>。微调后的模型忠实镜映目标市场的语言模式。
+        </div>
+    </div>
+
+    <div class="footer">
+        <span>From Human Buzz to Machine Hype</span>
+        <span class="pg">11 / 13</span>
+    </div>
+</section>
+
+<!-- ===== SLIDE 12 — Conclusion ===== -->
+<section class="slide">
+    <h2 class="display">一种需要<em>自身分析视角的新形态。</em></h2>
+
+    <div class="grid-2-asym">
+        <div>
+            <p class="lede">
+                我们的发现<strong>精炼了电子口碑理论</strong>，将焦点从<em>消息来源</em>转移至<strong>合成电子口碑内部的沟通特征</strong>——为 AI 中介的行销沟通研究与实务打开新方向。
+            </p>
+
+            <div class="aside">
+                <span class="aside-label">真实性的形成</span>
+                AI 生成内容的真实性，由<strong>原创性、独特人设、清晰的产品评价、感知到的可信度</strong>所塑造——而非由传讯者的身份决定。
+            </div>
+
+            <div class="aside" style="border-left-color:var(--highlight);background:rgba(192,74,26,0.05);">
+                <span class="aside-label" style="color:var(--highlight);">时尚产业的显著性</span>
+                人设建构与分析性思维在时尚领域格外有效——促进更深层的参与，并使消息更具细腻度。
+            </div>
+        </div>
+
+        <div>
+            <h3 class="subhead">关键启示</h3>
+            <hr class="rule-thick" style="margin:0 0 4px;">
+
+            <div class="takeaway">
+                <div class="t-num">i.</div>
+                <div class="t-body">八项变项皆<strong>呈正相关</strong>——合成沟通的本质就是相互连动的。</div>
+            </div>
+            <div class="takeaway">
+                <div class="t-num">ii.</div>
+                <div class="t-body"><strong>原创性 + 人设</strong>（r = .57）共同形塑合成电子口碑的感知真实性。</div>
+            </div>
+            <div class="takeaway">
+                <div class="t-num">iii.</div>
+                <div class="t-body">产业层级的差异反映<strong>市场行为</strong>，并非模型限制——模型忠实镜映真实互动动态。</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <span>From Human Buzz to Machine Hype</span>
+        <span class="pg">12 / 13</span>
+    </div>
+</section>
+
+<!-- ===== SLIDE 13 — Implications ===== -->
+<section class="slide">
+    <h2 class="display"><em>理论与实务</em>之意涵。</h2>
+
+    <div class="grid-2" style="gap:48px;">
+        <div>
+            <h3 class="subhead" style="color:var(--accent);">理论意涵</h3>
+            <table class="editorial">
+                <thead>
+                    <tr><th style="width:36px;">№</th><th>学术贡献</th></tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="num-cell" style="color:var(--ink);">i.</td>
+                        <td><strong>真实性由消息特质而非传讯者身份决定</strong>——扩展了合成电子口碑中真实性形成机制的理解。</td>
+                    </tr>
+                    <tr>
+                        <td class="num-cell" style="color:var(--ink);">ii.</td>
+                        <td><strong>原创性与人设相互依存</strong>——两者共同形塑 AI 生成内容如何被受众感知为真实。</td>
+                    </tr>
+                    <tr>
+                        <td class="num-cell" style="color:var(--ink);">iii.</td>
+                        <td><strong>人设与分析性思维</strong>有助于建构 <strong>AI 中介叙事</strong>理论，尤其在时尚电子口碑中。</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div>
+            <h3 class="subhead" style="color:var(--highlight);">实务意涵</h3>
+            <table class="editorial">
+                <thead>
+                    <tr><th style="width:36px;">№</th><th>品牌行动建议</th></tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="num-cell" style="color:var(--ink);">i.</td>
+                        <td>优先聚焦<strong>四大关键驱动因子</strong>——<em>原创性、产品评价、情感倾向、可信度</em>——以打造能引发共鸣的电子口碑。</td>
+                    </tr>
+                    <tr>
+                        <td class="num-cell" style="color:var(--ink);">ii.</td>
+                        <td>建构<strong>独特的人设</strong>，并提供清晰的产品评价与详细信息以利消费者评估。</td>
+                    </tr>
+                    <tr>
+                        <td class="num-cell" style="color:var(--ink);">iii.</td>
+                        <td><strong>时尚品牌</strong>——精炼 AI 人设、深化分析性内容，以实现差异化并创建更稳固的消费者链接。</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <hr class="rule" style="margin:28px 0 14px;">
+    <p class="cite" style="text-align:center;font-size:12px;color:var(--ink-3);">
+        关键字 — <em>口碑 · 电子口碑 · AI 生成电子口碑 · 真实性 · 人设 · 时尚 · 美妆 · 合成沟通</em>
+    </p>
+
+    <div class="footer">
+        <span>From Human Buzz to Machine Hype</span>
+        <span class="pg">13 / 13</span>
+    </div>
+</section>
+
+</body>
+</html>
