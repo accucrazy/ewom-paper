@@ -31,13 +31,14 @@
         /* ===== Slide shell ===== */
         .slide {
             width:1280px; height:720px; margin:0 auto 28px;
-            background:var(--bg); position:relative; padding:48px 72px 64px;
+            background:var(--bg); position:relative; padding:72px 80px 64px;
             display:flex; flex-direction:column; overflow:hidden;
             box-shadow:0 8px 60px rgba(40,30,20,0.08);
         }
 
-        /* ===== Masthead ===== */
-        .masthead {
+        /* ===== Masthead (hidden per request) ===== */
+        .masthead { display:none; }
+        .masthead-was {
             display:flex; justify-content:space-between; align-items:flex-end;
             padding-bottom:12px; border-bottom:1px solid var(--ink);
             margin-bottom:28px; font-family:'JetBrains Mono',monospace;
@@ -60,15 +61,8 @@
         }
         .footer .pg { color:var(--ink); font-weight:600; }
 
-        /* ===== Section label ===== */
-        .section-label {
-            font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:600;
-            letter-spacing:0.22em; text-transform:uppercase; color:var(--accent);
-            margin-bottom:10px; display:flex; align-items:center; gap:12px;
-        }
-        .section-label::before {
-            content:''; width:32px; height:1px; background:var(--accent);
-        }
+        /* ===== Section label (hidden per request) ===== */
+        .section-label { display:none; }
 
         /* ===== Headings ===== */
         h1.display, h2.display {
@@ -76,7 +70,7 @@
             line-height:1.08; letter-spacing:-0.015em; color:var(--ink);
         }
         h1.display { font-size:56px; }
-        h2.display { font-size:38px; margin-bottom:20px; }
+        h2.display { font-size:42px; margin-bottom:28px; }
         h2.display em { font-style:italic; color:var(--accent); font-weight:500; }
         h3.subhead {
             font-family:'Inter',sans-serif; font-size:13px; font-weight:700;
@@ -115,7 +109,7 @@
         /* ===== TITLE PAGE ===== */
         .title-page {
             background:var(--bg); display:flex; flex-direction:column;
-            justify-content:space-between; padding:56px 72px;
+            justify-content:center; align-items:flex-start; padding:80px;
         }
         .title-page .title-mast {
             font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.25em;
@@ -123,7 +117,7 @@
             padding-bottom:18px; border-bottom:2px solid var(--ink);
         }
         .title-page .center-block {
-            margin-top:auto; margin-bottom:auto; max-width:980px;
+            max-width:980px;
         }
         .title-page .vol {
             font-family:'JetBrains Mono',monospace; font-size:12px;
@@ -465,12 +459,7 @@
      SLIDE 01 — TITLE
      =================================================================== -->
 <section class="slide title-page">
-    <div class="title-mast">
-        <span style="color:var(--accent);">From Human Buzz to Machine Hype</span>
-        &nbsp;&nbsp;·&nbsp;&nbsp; A GFMC 2026 Research Paper
-    </div>
     <div class="center-block">
-        <div class="vol">Vol. 01 · Madrid · July 2026</div>
         <h1>From Human Buzz to <span class="it">Machine Hype</span><br>How Gen-AI Rewrites e-Word<br>of Mouth in Consumer Narratives</h1>
         <div class="subtitle">
             Exploring the characteristics of persona-driven AI-generated eWOM<br>
@@ -488,10 +477,6 @@
                 <div class="aff">Accucrazy · Taipei, Taiwan</div>
             </div>
         </div>
-    </div>
-    <div class="bottom">
-        <span>2026 Global Fashion Management Conference</span>
-        <span>Concept &amp; Method · Plates 01 – 13</span>
     </div>
 </section>
 
