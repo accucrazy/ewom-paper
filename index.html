@@ -451,6 +451,28 @@
             font-size:11px; color:var(--ink-3); font-style:italic;
             font-family:'Crimson Pro',serif;
         }
+
+        @page {
+            size: 1280px 720px;
+            margin: 0;
+        }
+        @media print {
+            html, body { background:#FFFFFF !important; margin:0; padding:0; }
+            body { -webkit-print-color-adjust:exact; print-color-adjust:exact; color-adjust:exact; }
+            .slide {
+                margin:0 !important;
+                box-shadow:none !important;
+                page-break-after:always;
+                break-after:page;
+                width:1280px;
+                height:720px;
+                overflow:hidden;
+            }
+            .slide:last-of-type {
+                page-break-after:auto;
+                break-after:auto;
+            }
+        }
     </style>
 </head>
 <body>
@@ -957,7 +979,7 @@
                 Our proprietary CoT training structures the generation process around <em>three pillars</em> — the model reasons through each before producing output.
             </p>
 
-            <div style="margin-top:24px;">
+            <div style="margin-top:18px;">
                 <div class="pillar-row">
                     <div class="p-num">i.</div>
                     <div>
