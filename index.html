@@ -5,744 +5,1272 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GFMC 2026 — From Human Buzz to Machine Hype</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Crimson+Pro:ital,wght@0,400;0,600;0,700;1,400&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+        :root {
+            --bg: #FAF7F0;
+            --paper: #FFFFFF;
+            --ink: #1A1A1A;
+            --ink-2: #4A4A4A;
+            --ink-3: #8A8A8A;
+            --rule: #D8CFC2;
+            --rule-soft: #ECE6D8;
+            --accent: #6B2C2C;
+            --accent-soft: #C4A398;
+            --highlight: #C04A1A;
+        }
+
         * { margin:0; padding:0; box-sizing:border-box; }
-        body { font-family:'Inter',sans-serif; background:#f5f5f7; color:#1a1a2e; }
+        html, body { background:#EFEAE0; }
+        body {
+            font-family:'Inter',-apple-system,sans-serif;
+            color:var(--ink); font-feature-settings:'ss01','cv01','cv02';
+            -webkit-font-smoothing:antialiased;
+        }
 
+        /* ===== Slide shell ===== */
         .slide {
-            min-height:100vh; display:flex; flex-direction:column; justify-content:center;
-            padding:80px 110px; position:relative; page-break-after:always;
-            background:#fff; box-shadow:0 4px 40px rgba(0,0,0,0.04); margin-bottom:24px;
-        }
-        .slide-num {
-            position:absolute; bottom:40px; right:60px;
-            font-size:14px; font-weight:700; color:#bbb; font-family:'Inter',monospace;
-            letter-spacing:0.1em;
-        }
-        .slide-footer {
-            position:absolute; bottom:40px; left:110px;
-            font-size:13px; color:#aaa; font-weight:500; letter-spacing:0.08em;
+            width:1280px; min-height:780px; margin:0 auto 28px;
+            background:var(--bg); position:relative; padding:64px 88px 80px;
+            display:flex; flex-direction:column;
+            box-shadow:0 8px 60px rgba(40,30,20,0.08);
         }
 
-        .title-slide {
-            background:linear-gradient(135deg,#1a1a2e 0%,#16213e 50%,#0f3460 100%);
-            color:#fff; align-items:center; text-align:center;
+        /* ===== Masthead ===== */
+        .masthead {
+            display:flex; justify-content:space-between; align-items:flex-end;
+            padding-bottom:18px; border-bottom:1px solid var(--ink);
+            margin-bottom:48px; font-family:'JetBrains Mono',monospace;
+            font-size:11px; letter-spacing:0.12em; text-transform:uppercase;
+            color:var(--ink);
         }
-        .title-slide h1 { font-size:52px; font-weight:800; line-height:1.25; max-width:1000px; margin-bottom:32px; letter-spacing:-0.02em; }
-        .title-slide .subtitle { font-size:22px; color:rgba(255,255,255,0.7); font-weight:300; line-height:1.7; max-width:850px; }
-        .title-slide .conf { font-size:15px; color:rgba(255,255,255,0.4); font-weight:600; letter-spacing:0.2em; text-transform:uppercase; margin-bottom:40px; }
-        .title-slide .authors { font-size:17px; color:rgba(255,255,255,0.6); margin-top:48px; line-height:2; }
-        .title-slide .accent-line {
-            width:80px; height:4px; background:#6C63FF; margin:0 auto 32px;
+        .masthead .left { font-weight:600; }
+        .masthead .left .pub { color:var(--accent); font-weight:700; }
+        .masthead .right { color:var(--ink-2); font-weight:500; display:flex; gap:18px; }
+        .masthead .right span::before { content:'·'; margin-right:18px; color:var(--ink-3); }
+        .masthead .right span:first-child::before { display:none; }
+
+        /* ===== Page footer ===== */
+        .footer {
+            position:absolute; bottom:32px; left:88px; right:88px;
+            display:flex; justify-content:space-between; align-items:center;
+            padding-top:16px; border-top:1px solid var(--rule);
+            font-family:'JetBrains Mono',monospace; font-size:10px;
+            letter-spacing:0.15em; text-transform:uppercase; color:var(--ink-3);
+        }
+        .footer .pg { color:var(--ink); font-weight:600; }
+
+        /* ===== Section label ===== */
+        .section-label {
+            font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:600;
+            letter-spacing:0.25em; text-transform:uppercase; color:var(--accent);
+            margin-bottom:14px; display:flex; align-items:center; gap:14px;
+        }
+        .section-label::before {
+            content:''; width:32px; height:1px; background:var(--accent);
         }
 
-        .divider {
-            background:linear-gradient(135deg,#1a1a2e 0%,#0f3460 100%); color:#fff;
-            align-items:flex-start; padding-left:110px;
+        /* ===== Headings ===== */
+        h1.display, h2.display {
+            font-family:'Crimson Pro',Georgia,serif; font-weight:500;
+            line-height:1.08; letter-spacing:-0.015em; color:var(--ink);
         }
-        .divider .label { font-size:16px; font-weight:700; letter-spacing:0.25em; text-transform:uppercase; color:rgba(255,255,255,0.4); margin-bottom:20px; }
-        .divider h2 { font-size:72px; font-weight:800; line-height:1.15; letter-spacing:-0.02em; }
-        .divider .underline { width:120px; height:5px; background:#6C63FF; margin-top:28px; }
+        h1.display { font-size:68px; }
+        h2.display { font-size:46px; margin-bottom:28px; }
+        h2.display em { font-style:italic; color:var(--accent); font-weight:500; }
+        h3.subhead {
+            font-family:'Inter',sans-serif; font-size:13px; font-weight:700;
+            letter-spacing:0.15em; text-transform:uppercase; color:var(--ink);
+            margin-bottom:14px;
+        }
+        h3.subhead .num {
+            font-family:'JetBrains Mono',monospace; color:var(--accent);
+            font-weight:600; margin-right:10px;
+        }
 
-        h2.section-title { font-size:40px; font-weight:800; margin-bottom:32px; color:#1a1a2e; line-height:1.25; letter-spacing:-0.02em; }
-        .accent { color:#6C63FF; }
+        /* ===== Body text ===== */
+        .lede {
+            font-family:'Crimson Pro',Georgia,serif; font-size:24px; line-height:1.5;
+            color:var(--ink-2); font-weight:400; max-width:780px;
+        }
+        .lede strong { color:var(--ink); font-weight:600; }
+        .lede em { font-style:italic; color:var(--accent); }
+        .body { font-size:15px; line-height:1.7; color:var(--ink-2); }
+        .body strong { color:var(--ink); font-weight:600; }
 
-        .tag { display:inline-block; padding:6px 18px; border-radius:6px; font-size:13px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; margin-bottom:20px; }
-        .tag-purple { background:rgba(108,99,255,0.1); color:#6C63FF; }
-        .tag-red { background:rgba(231,76,60,0.1); color:#e74c3c; }
-        .tag-blue { background:rgba(52,152,219,0.1); color:#3498db; }
-        .tag-green { background:rgba(39,174,96,0.1); color:#27ae60; }
+        .dropcap::first-letter {
+            font-family:'Crimson Pro',serif; font-size:62px; font-weight:600;
+            float:left; line-height:0.9; padding:6px 12px 0 0; color:var(--accent);
+        }
 
-        .body-text { font-family:'Crimson Pro',serif; font-size:23px; color:#3d3d5c; line-height:1.7; }
+        /* ===== Grid ===== */
+        .grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:64px; }
+        .grid-2-asym { display:grid; grid-template-columns:0.9fr 1.1fr; gap:56px; }
+        .grid-3 { display:grid; grid-template-columns:repeat(3,1fr); gap:36px; }
 
-        .card {
-            background:#fafafa; border:1px solid #ececec; border-radius:16px; padding:28px 32px;
-            transition:all .2s;
-        }
-        .card h3 { font-size:19px; font-weight:700; margin-bottom:8px; }
-        .card p { font-size:16px; color:#555; line-height:1.65; }
+        /* ===== Editorial divider / rule ===== */
+        .rule { border:none; border-top:1px solid var(--rule); margin:24px 0; }
+        .rule-thick { border:none; border-top:2px solid var(--ink); margin:18px 0; }
 
-        .highlight-box {
-            background:linear-gradient(135deg,rgba(108,99,255,0.08),rgba(108,99,255,0.02));
-            border-left:5px solid #6C63FF; padding:24px 32px; border-radius:0 14px 14px 0;
-            margin:24px 0;
+        /* ===== TITLE PAGE ===== */
+        .title-page {
+            background:var(--bg); display:flex; flex-direction:column;
+            justify-content:space-between; padding:80px 88px;
         }
-        .highlight-box p { font-size:17px; color:#3d3d5c; line-height:1.7; }
+        .title-page .title-mast {
+            font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:0.25em;
+            text-transform:uppercase; color:var(--ink-2);
+            padding-bottom:18px; border-bottom:2px solid var(--ink);
+        }
+        .title-page .center-block {
+            margin-top:auto; margin-bottom:auto; max-width:980px;
+        }
+        .title-page .vol {
+            font-family:'JetBrains Mono',monospace; font-size:12px;
+            letter-spacing:0.3em; color:var(--accent); font-weight:600;
+            text-transform:uppercase; margin-bottom:24px;
+        }
+        .title-page h1 {
+            font-family:'Crimson Pro',serif; font-size:78px; line-height:1.05;
+            font-weight:500; letter-spacing:-0.025em; color:var(--ink);
+            margin-bottom:32px;
+        }
+        .title-page h1 .it { font-style:italic; color:var(--accent); font-weight:500; }
+        .title-page .subtitle {
+            font-family:'Crimson Pro',serif; font-style:italic; font-size:22px;
+            color:var(--ink-2); line-height:1.5; max-width:780px;
+        }
+        .title-page .authors-block {
+            margin-top:48px; padding-top:24px; border-top:1px solid var(--rule);
+            display:grid; grid-template-columns:1fr 1fr; gap:32px;
+        }
+        .authors-block .author-col .label {
+            font-family:'JetBrains Mono',monospace; font-size:10px;
+            letter-spacing:0.25em; text-transform:uppercase; color:var(--ink-3);
+            margin-bottom:6px;
+        }
+        .authors-block .author-col .name {
+            font-family:'Crimson Pro',serif; font-size:18px; color:var(--ink);
+            font-weight:500;
+        }
+        .authors-block .author-col .aff {
+            font-size:12px; color:var(--ink-3); margin-top:2px;
+            letter-spacing:0.02em;
+        }
+        .title-page .bottom {
+            font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.2em;
+            text-transform:uppercase; color:var(--ink-3);
+            display:flex; justify-content:space-between;
+            padding-top:18px; border-top:1px solid var(--rule);
+        }
 
-        .data-table {
-            width:100%; border-collapse:separate; border-spacing:0;
-            background:#fff; border-radius:14px; overflow:hidden;
-            box-shadow:0 2px 16px rgba(0,0,0,0.04);
+        /* ===== Divider page ===== */
+        .divider-page {
+            background:var(--ink); color:var(--bg);
         }
-        .data-table th {
-            background:#1a1a2e; color:#fff; padding:18px 22px;
-            font-size:14px; font-weight:700; text-align:left; letter-spacing:0.05em; text-transform:uppercase;
+        .divider-page .masthead {
+            border-bottom-color:var(--bg); color:var(--bg);
         }
-        .data-table td {
-            padding:18px 22px; font-size:16px; border-bottom:1px solid #f0f0f0; color:#333; vertical-align:top;
+        .divider-page .masthead .left .pub { color:var(--highlight); }
+        .divider-page .masthead .right { color:rgba(250,247,240,0.6); }
+        .divider-page .footer {
+            border-top-color:rgba(250,247,240,0.3); color:rgba(250,247,240,0.5);
         }
-        .data-table tr:last-child td { border-bottom:none; }
-        .data-table tr:nth-child(even) td { background:#fafafa; }
-        .data-table .var-cell { font-weight:700; color:#1a1a2e; white-space:nowrap; }
-        .data-table .accent-row td { background:rgba(108,99,255,0.05) !important; }
+        .divider-page .footer .pg { color:var(--bg); }
+        .divider-page .part-label {
+            font-family:'JetBrains Mono',monospace; font-size:13px;
+            letter-spacing:0.3em; text-transform:uppercase; color:var(--highlight);
+            margin-bottom:28px; margin-top:80px;
+        }
+        .divider-page h2 {
+            font-family:'Crimson Pro',serif; font-size:96px; font-weight:400;
+            line-height:1.0; color:var(--bg); letter-spacing:-0.02em;
+        }
+        .divider-page h2 em { font-style:italic; color:var(--accent-soft); font-weight:400; }
+        .divider-page .quote {
+            margin-top:48px; max-width:680px;
+            font-family:'Crimson Pro',serif; font-style:italic; font-size:18px;
+            color:rgba(250,247,240,0.65); line-height:1.6;
+        }
 
-        .flow-chain {
-            display:flex; flex-direction:column; gap:16px; margin-top:24px;
+        /* ===== Data card (no border-accent slop) ===== */
+        .panel {
+            background:var(--paper); padding:28px 32px;
+            border:1px solid var(--rule);
         }
-        .flow-step {
-            background:#fff; border:2px solid #e8e8f5; border-radius:14px; padding:20px 26px;
-            display:flex; align-items:center; gap:20px; transition:all .2s;
+        .panel h4 {
+            font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:600;
+            letter-spacing:0.2em; text-transform:uppercase; color:var(--ink-3);
+            margin-bottom:10px;
         }
-        .flow-step:hover { border-color:#6C63FF; transform:translateX(4px); }
-        .flow-step .step-icon {
-            width:48px; height:48px; border-radius:12px; background:#f0f0ff; color:#6C63FF;
-            display:flex; align-items:center; justify-content:center; font-weight:800; font-size:20px; flex-shrink:0;
+        .panel .panel-title {
+            font-family:'Crimson Pro',serif; font-size:22px; font-weight:500;
+            line-height:1.3; color:var(--ink); margin-bottom:10px;
         }
-        .flow-step .step-title { font-size:17px; font-weight:700; color:#1a1a2e; }
-        .flow-step .step-example {
-            font-family:'Crimson Pro',serif; font-style:italic; font-size:15px; color:#666; margin-top:4px; line-height:1.5;
-        }
-        .flow-step.final { background:linear-gradient(135deg,#6C63FF 0%,#5849f0 100%); color:#fff; border-color:#6C63FF; }
-        .flow-step.final .step-icon { background:rgba(255,255,255,0.2); color:#fff; }
-        .flow-step.final .step-title { color:#fff; }
-        .flow-step.final .step-example { color:rgba(255,255,255,0.85); }
-        .flow-arrow-v { text-align:center; font-size:22px; color:#d0d0e0; margin:-6px 0; }
+        .panel .panel-title em { font-style:italic; color:var(--accent); }
+        .panel p { font-size:14px; line-height:1.65; color:var(--ink-2); }
 
-        .stat-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; margin-top:24px; }
-        .stat-card {
-            background:linear-gradient(135deg,#fafafa,#f5f5fa); border-radius:16px;
-            padding:32px 24px; text-align:center; border:1px solid #ececec;
+        /* ===== Editorial RQ box ===== */
+        .rq-block {
+            padding:24px 0; border-top:1px solid var(--ink);
+            border-bottom:1px solid var(--ink); margin:12px 0;
+            display:flex; gap:24px; align-items:flex-start;
         }
-        .stat-card .num { font-size:52px; font-weight:800; color:#6C63FF; letter-spacing:-0.02em; }
-        .stat-card .desc { font-size:15px; color:#666; margin-top:8px; line-height:1.5; font-weight:500; }
-
-        .alpha-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-top:18px; }
-        .alpha-item {
-            background:#fafafa; border-radius:12px; padding:18px; text-align:center; border:1px solid #ececec;
+        .rq-block .rq-num {
+            font-family:'Crimson Pro',serif; font-style:italic; font-size:42px;
+            color:var(--accent); line-height:1; flex-shrink:0; min-width:80px;
         }
-        .alpha-item .name { font-size:13px; font-weight:600; color:#888; text-transform:uppercase; letter-spacing:0.05em; }
-        .alpha-item .val { font-size:26px; font-weight:800; margin-top:6px; }
-        .alpha-good { color:#27ae60; }
-        .alpha-ok { color:#f39c12; }
-
-        .img-container { margin:20px 0; text-align:center; }
-        .img-container img { max-width:100%; max-height:440px; border-radius:14px; border:1px solid #ececec; }
-
-        .two-col { display:grid; grid-template-columns:1fr 1fr; gap:48px; align-items:start; }
-
-        .rq-box {
-            background:#1a1a2e; color:#fff; border-radius:16px; padding:32px 36px; margin-bottom:18px;
-            position:relative; overflow:hidden;
+        .rq-block .rq-body {
+            font-family:'Crimson Pro',serif; font-size:20px; line-height:1.45;
+            color:var(--ink); font-weight:400;
         }
-        .rq-box::before {
-            content:''; position:absolute; top:0; left:0; width:5px; height:100%; background:#6C63FF;
+        .rq-block .rq-label {
+            font-family:'JetBrains Mono',monospace; font-size:10px;
+            letter-spacing:0.25em; text-transform:uppercase; color:var(--ink-3);
+            margin-bottom:8px; font-weight:600;
         }
-        .rq-box .rq-label { font-size:13px; font-weight:700; letter-spacing:0.2em; color:rgba(255,255,255,0.45); margin-bottom:10px; }
-        .rq-box p { font-size:19px; font-weight:500; line-height:1.6; }
 
-        .method-step { display:flex; gap:24px; align-items:flex-start; margin-bottom:24px; }
-        .step-num {
-            width:48px; height:48px; border-radius:50%;
-            background:linear-gradient(135deg,#6C63FF,#5849f0); color:#fff;
-            display:flex; align-items:center; justify-content:center; font-weight:800; font-size:18px; flex-shrink:0;
-            box-shadow:0 4px 12px rgba(108,99,255,0.3);
+        /* ===== Numbered list (variables) ===== */
+        .var-list { display:flex; flex-direction:column; }
+        .var-row {
+            display:grid; grid-template-columns:48px 1fr;
+            gap:18px; padding:14px 0; border-top:1px solid var(--rule-soft);
+            align-items:baseline;
         }
-        .step-content h3 { font-size:18px; font-weight:700; margin-bottom:6px; }
-        .step-content p { font-size:15px; color:#666; line-height:1.65; }
+        .var-row:last-child { border-bottom:1px solid var(--rule-soft); }
+        .var-row .vn {
+            font-family:'JetBrains Mono',monospace; font-size:13px; font-weight:600;
+            color:var(--accent); letter-spacing:0.05em; padding-top:4px;
+        }
+        .var-row .vtitle {
+            font-family:'Crimson Pro',serif; font-size:19px; font-weight:600;
+            color:var(--ink); margin-bottom:2px; line-height:1.3;
+        }
+        .var-row .vtitle em { font-style:italic; }
+        .var-row .vdesc {
+            font-size:13px; line-height:1.55; color:var(--ink-2);
+        }
+        .var-list.classic .vn { color:var(--ink); }
+        .var-list.extended .vn { color:var(--accent); }
 
-        .var-card {
-            background:#fff; border:1px solid #ececec; border-radius:14px; padding:22px 24px;
-            display:flex; align-items:flex-start; gap:18px; transition:all .2s;
+        /* ===== HOW IT WORKS flow ===== */
+        .flow {
+            position:relative; padding-left:24px;
         }
-        .var-card:hover { border-color:#6C63FF; box-shadow:0 6px 20px rgba(108,99,255,0.08); }
-        .var-card .var-num {
-            width:36px; height:36px; border-radius:10px; flex-shrink:0;
+        .flow::before {
+            content:''; position:absolute; left:7px; top:14px; bottom:14px;
+            width:1px; background:var(--rule);
+        }
+        .flow-item {
+            position:relative; padding:18px 0 18px 16px;
+        }
+        .flow-item:not(:last-child) { border-bottom:1px dashed var(--rule-soft); }
+        .flow-item::before {
+            content:''; position:absolute; left:-22px; top:24px;
+            width:13px; height:13px; border-radius:50%;
+            background:var(--bg); border:2px solid var(--accent);
+        }
+        .flow-item.final::before {
+            background:var(--accent); border-color:var(--accent);
+        }
+        .flow-item .step-label {
+            font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:600;
+            letter-spacing:0.2em; text-transform:uppercase; color:var(--ink-3);
+            margin-bottom:4px;
+        }
+        .flow-item .step-title {
+            font-family:'Crimson Pro',serif; font-size:18px; font-weight:600;
+            color:var(--ink); margin-bottom:6px; line-height:1.3;
+        }
+        .flow-item .step-example {
+            font-family:'Crimson Pro',serif; font-style:italic; font-size:15px;
+            color:var(--ink-2); line-height:1.55;
+            padding:8px 14px; border-left:2px solid var(--rule);
+            background:rgba(216,207,194,0.18);
+        }
+        .flow-item.final .step-example {
+            border-left-color:var(--accent); color:var(--ink);
+            background:rgba(107,44,44,0.06);
+        }
+
+        /* ===== Editorial table ===== */
+        table.editorial {
+            width:100%; border-collapse:collapse; font-size:14px;
+        }
+        table.editorial thead th {
+            text-align:left; font-family:'JetBrains Mono',monospace;
+            font-size:10px; letter-spacing:0.2em; text-transform:uppercase;
+            color:var(--ink-3); font-weight:600; padding:0 14px 12px 0;
+            border-bottom:2px solid var(--ink);
+        }
+        table.editorial thead th.num-col { text-align:right; }
+        table.editorial tbody td {
+            padding:14px 14px 14px 0; border-bottom:1px solid var(--rule-soft);
+            color:var(--ink-2); line-height:1.5;
+        }
+        table.editorial tbody td.var-name {
+            font-family:'Crimson Pro',serif; font-size:17px; font-weight:600;
+            color:var(--ink);
+        }
+        table.editorial tbody td.num-cell {
+            font-family:'JetBrains Mono',monospace; font-size:16px; font-weight:600;
+            color:var(--accent); text-align:right;
+        }
+        table.editorial tbody td.note { font-size:13px; color:var(--ink-3); }
+        table.editorial tbody tr.highlight td { background:rgba(192,74,26,0.04); }
+        table.editorial tbody tr.highlight td.num-cell { color:var(--highlight); font-size:18px; }
+
+        /* ===== Stat figure ===== */
+        .figure-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:0; }
+        .figure-cell {
+            padding:32px 28px 28px; border-right:1px solid var(--rule);
+        }
+        .figure-cell:last-child { border-right:none; }
+        .figure-cell .fig-num {
+            font-family:'Crimson Pro',serif; font-size:64px; font-weight:500;
+            color:var(--ink); line-height:1; letter-spacing:-0.02em;
+        }
+        .figure-cell .fig-unit {
+            font-family:'JetBrains Mono',monospace; font-size:11px;
+            letter-spacing:0.15em; text-transform:uppercase; color:var(--accent);
+            margin-top:12px;
+        }
+        .figure-cell .fig-desc {
+            font-size:13px; line-height:1.55; color:var(--ink-2); margin-top:8px;
+        }
+
+        /* ===== Sector bar ===== */
+        .sector-bar {
+            display:flex; height:42px; border:1px solid var(--ink);
+            font-family:'Inter',sans-serif; font-size:12px; font-weight:600;
+        }
+        .sector-bar > div {
             display:flex; align-items:center; justify-content:center;
-            font-weight:800; font-size:15px;
+            color:var(--bg); letter-spacing:0.03em;
         }
-        .var-card.classic .var-num { background:rgba(108,99,255,0.12); color:#6C63FF; }
-        .var-card.extended .var-num { background:rgba(231,76,60,0.12); color:#e74c3c; }
-        .var-card h4 { font-size:17px; font-weight:700; margin-bottom:4px; color:#1a1a2e; }
-        .var-card p { font-size:14px; color:#666; line-height:1.55; }
+        .sector-bar .s-fashion { background:var(--ink); flex:222; }
+        .sector-bar .s-beauty { background:var(--accent); flex:408; }
+        .sector-bar .s-3c { background:var(--highlight); flex:370; }
+        .sector-meta {
+            display:flex; margin-top:8px; font-family:'JetBrains Mono',monospace;
+            font-size:10px; color:var(--ink-3); letter-spacing:0.1em; text-transform:uppercase;
+        }
+        .sector-meta > div { text-align:center; }
+        .sector-meta .m-fashion { flex:222; }
+        .sector-meta .m-beauty { flex:408; }
+        .sector-meta .m-3c { flex:370; }
 
-        .var-section-label {
-            font-size:13px; font-weight:700; text-transform:uppercase; letter-spacing:0.12em;
-            margin-bottom:14px; display:flex; align-items:center; gap:10px;
+        /* ===== Alpha grid ===== */
+        .alpha-figs { display:grid; grid-template-columns:repeat(4,1fr); }
+        .alpha-fig {
+            padding:18px 14px; border-right:1px solid var(--rule-soft);
+            border-bottom:1px solid var(--rule-soft);
         }
-        .var-section-label .dot { width:10px; height:10px; border-radius:50%; }
+        .alpha-fig:nth-child(4n) { border-right:none; }
+        .alpha-fig:nth-last-child(-n+4) { border-bottom:none; }
+        .alpha-fig .a-name {
+            font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:600;
+            color:var(--ink-3); letter-spacing:0.1em; text-transform:uppercase;
+            margin-bottom:4px;
+        }
+        .alpha-fig .a-val {
+            font-family:'Crimson Pro',serif; font-size:26px; font-weight:600;
+            color:var(--ink); line-height:1;
+        }
+        .alpha-fig.good .a-val { color:var(--accent); }
 
-        .pillar-card {
-            background:#fff; border-radius:14px; padding:24px 26px;
-            border-top:4px solid; box-shadow:0 2px 10px rgba(0,0,0,0.03);
+        /* ===== Pillar (CoT) ===== */
+        .pillar-row {
+            display:grid; grid-template-columns:64px 1fr;
+            gap:24px; padding:22px 0; border-top:1px solid var(--rule-soft);
+            align-items:start;
         }
-        .pillar-card .icon { font-size:28px; margin-bottom:10px; }
-        .pillar-card h3 { font-size:18px; font-weight:700; margin-bottom:8px; }
-        .pillar-card p { font-size:15px; color:#666; line-height:1.6; }
+        .pillar-row:last-of-type { border-bottom:1px solid var(--rule-soft); }
+        .pillar-row .p-num {
+            font-family:'Crimson Pro',serif; font-style:italic; font-size:40px;
+            font-weight:500; color:var(--accent); line-height:0.9;
+        }
+        .pillar-row h4 {
+            font-family:'Crimson Pro',serif; font-size:21px; font-weight:600;
+            color:var(--ink); margin-bottom:6px; line-height:1.3;
+        }
+        .pillar-row p { font-size:14px; line-height:1.6; color:var(--ink-2); }
 
-        .impl-table {
-            width:100%; border-collapse:separate; border-spacing:0;
-            background:#fff; border-radius:14px; overflow:hidden;
-            box-shadow:0 2px 16px rgba(0,0,0,0.04); margin-top:16px;
+        /* ===== Note / aside ===== */
+        .aside {
+            border-left:3px solid var(--accent); padding:16px 22px;
+            background:rgba(107,44,44,0.04);
+            font-family:'Crimson Pro',serif; font-size:16px; line-height:1.55;
+            color:var(--ink); margin:20px 0;
         }
-        .impl-table th {
-            padding:18px 22px; font-size:14px; font-weight:700;
-            text-align:left; letter-spacing:0.08em; text-transform:uppercase;
-            color:#fff;
+        .aside strong { font-weight:600; }
+        .aside .aside-label {
+            font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:600;
+            letter-spacing:0.2em; text-transform:uppercase; color:var(--accent);
+            margin-bottom:6px; display:block;
         }
-        .impl-table .theory-head { background:#6C63FF; }
-        .impl-table .practice-head { background:#27ae60; }
-        .impl-table td {
-            padding:20px 22px; font-size:15px; color:#3d3d5c; line-height:1.6;
-            border-bottom:1px solid #f0f0f0; vertical-align:top;
+
+        /* ===== Verification workflow ===== */
+        .workflow {
+            display:flex; align-items:stretch; border:1px solid var(--ink);
         }
-        .impl-table td:first-child {
-            font-weight:800; color:#1a1a2e; width:60px; text-align:center;
-            font-size:18px;
+        .workflow .wf-step {
+            flex:1; padding:20px 18px; border-right:1px solid var(--ink);
+            text-align:center; background:var(--paper);
         }
-        .impl-table tr:last-child td { border-bottom:none; }
+        .workflow .wf-step:last-child { border-right:none; background:var(--ink); color:var(--bg); }
+        .workflow .wf-step .wf-num {
+            font-family:'JetBrains Mono',monospace; font-size:10px;
+            letter-spacing:0.2em; color:var(--ink-3); margin-bottom:6px;
+        }
+        .workflow .wf-step:last-child .wf-num { color:rgba(250,247,240,0.5); }
+        .workflow .wf-step .wf-title {
+            font-family:'Crimson Pro',serif; font-size:16px; font-weight:600;
+            color:var(--ink);
+        }
+        .workflow .wf-step:last-child .wf-title { color:var(--bg); }
+        .workflow .wf-step .wf-sub {
+            font-size:11px; color:var(--ink-3); margin-top:3px;
+            font-family:'JetBrains Mono',monospace; letter-spacing:0.08em;
+        }
+        .workflow .wf-step:last-child .wf-sub { color:rgba(250,247,240,0.6); }
+
+        /* ===== Conclusion takeaway list ===== */
+        .takeaway {
+            display:flex; gap:20px; padding:18px 0;
+            border-top:1px solid var(--rule-soft); align-items:flex-start;
+        }
+        .takeaway:last-of-type { border-bottom:1px solid var(--rule-soft); }
+        .takeaway .t-num {
+            font-family:'Crimson Pro',serif; font-style:italic; font-size:38px;
+            color:var(--accent); line-height:1; flex-shrink:0;
+        }
+        .takeaway .t-body {
+            font-family:'Crimson Pro',serif; font-size:17px; line-height:1.55;
+            color:var(--ink-2);
+        }
+        .takeaway .t-body strong { color:var(--ink); font-weight:600; }
+
+        /* ===== Citation ===== */
+        .cite {
+            font-size:11px; color:var(--ink-3); font-style:italic;
+            font-family:'Crimson Pro',serif;
+        }
     </style>
 </head>
 <body>
 
-<!-- ===== SLIDE 01 — Title ===== -->
-<section class="slide title-slide">
-    <div class="accent-line"></div>
-    <div class="conf">2026 Global Fashion Management Conference · Madrid</div>
-    <h1>From Human Buzz to Machine Hype:<br>How Gen-AI Rewrites e-Word of Mouth<br>in Consumer Narratives</h1>
-    <div class="subtitle">Exploring the Characteristics of Persona-Driven AI-Generated eWOM<br>across Fashion, Beauty, and 3C / Consumer Electronics</div>
-    <div class="authors">
-        Wu, Shih-Chia · Cao, Yajie<br>
-        <span style="color:rgba(255,255,255,0.85);font-weight:600;">Wu, Wei Han · Hsieh, Kai-Hong</span><br>
-        <span style="font-size:14px;color:rgba(255,255,255,0.5);">The Chinese University of Hong Kong &nbsp;|&nbsp; Accucrazy, Taiwan</span>
+<!-- ===================================================================
+     SLIDE 01 — TITLE
+     =================================================================== -->
+<section class="slide title-page">
+    <div class="title-mast">
+        <span style="color:var(--accent);">From Human Buzz to Machine Hype</span>
+        &nbsp;&nbsp;·&nbsp;&nbsp; A GFMC 2026 Research Paper
     </div>
-    <div class="slide-num" style="color:rgba(255,255,255,0.25)">01</div>
-</section>
-
-<!-- ===== SLIDE 02 — Background & Research Questions (swapped left/right) ===== -->
-<section class="slide">
-    <span class="tag tag-purple">BACKGROUND & RESEARCH QUESTIONS</span>
-    <h2 class="section-title">The Rise of <span class="accent">AI-Generated eWOM</span></h2>
-    <div class="two-col">
-        <div>
-            <div class="card" style="margin-bottom:18px;border-left:4px solid #6C63FF;">
-                <h3>Traditional eWOM</h3>
-                <p>Organic consumer reviews, UGC, opinion sharing among individuals</p>
+    <div class="center-block">
+        <div class="vol">Vol. 01 · Madrid · April 2026</div>
+        <h1>From Human Buzz to <span class="it">Machine Hype</span><br>How Gen-AI Rewrites e-Word<br>of Mouth in Consumer Narratives</h1>
+        <div class="subtitle">
+            Exploring the characteristics of persona-driven AI-generated eWOM<br>
+            across Fashion, Beauty, and 3C / Consumer Electronics.
+        </div>
+        <div class="authors-block">
+            <div class="author-col">
+                <div class="label">Authors</div>
+                <div class="name">Wu, Shih-Chia · Cao, Yajie</div>
+                <div class="aff">The Chinese University of Hong Kong</div>
             </div>
-            <div style="text-align:center;font-size:28px;color:#ccc;margin:12px 0;">↓ evolution</div>
-            <div class="card" style="border-left:4px solid #e74c3c;">
-                <h3>AI-Generated eWOM <span style="font-size:13px;color:#e74c3c;font-weight:700;">NEW</span></h3>
-                <p>Persona-driven synthetic content backed by real consumer data — both poster and commenter</p>
-            </div>
-            <div class="highlight-box" style="margin-top:20px;">
-                <p>We draw on <strong>message volume, credibility, valence</strong> and extend with: <strong>analytical thinking, authenticity, originality, product evaluation, persona</strong>.</p>
+            <div class="author-col">
+                <div class="label">Co-authors</div>
+                <div class="name">Wu, Wei Han · Hsieh, Kai-Hong</div>
+                <div class="aff">Accucrazy · Taipei, Taiwan</div>
             </div>
         </div>
+    </div>
+    <div class="bottom">
+        <span>2026 Global Fashion Management Conference</span>
+        <span>Concept &amp; Method · Plates 01 – 13</span>
+    </div>
+</section>
+
+<!-- ===================================================================
+     SLIDE 02 — Background & Research Questions
+     =================================================================== -->
+<section class="slide">
+    <div class="masthead">
+        <div class="left"><span class="pub">From Human Buzz to Machine Hype</span> &nbsp;·&nbsp; Part I · Concept</div>
+        <div class="right"><span>Background</span><span>Research Questions</span></div>
+    </div>
+
+    <div class="section-label">Plate 02 — Background</div>
+    <h2 class="display">The rise of <em>AI-generated eWOM.</em></h2>
+
+    <div class="grid-2-asym">
         <div>
-            <p class="body-text" style="margin-bottom:28px;">
-                eWOM is the <strong>#1 source of brand discovery</strong> in the US and top-3 in UK/Germany. A new form has emerged: brands leverage social listening + consumer sentiment → AI-generated eWOM with a <strong>pre-set persona</strong>.
+            <p class="lede dropcap">
+                eWOM is the <strong>#1 source of brand discovery</strong> in the US and top-three in the UK and Germany. A new form has emerged — brands leverage social listening and consumer sentiment to produce <em>AI-generated eWOM with a pre-set persona</em>.
             </p>
-            <div class="rq-box">
-                <div class="rq-label">RESEARCH QUESTION 1</div>
-                <p>What are the <strong>specific characteristics</strong> of AI-generated eWOM when explored from existing eWOM attributes?</p>
+
+            <hr class="rule" style="margin:32px 0 18px;">
+
+            <div class="grid-2" style="gap:24px;">
+                <div>
+                    <h3 class="subhead"><span class="num">A.</span>Traditional eWOM</h3>
+                    <p class="body">Organic consumer reviews, UGC, and opinion sharing among individuals.</p>
+                </div>
+                <div>
+                    <h3 class="subhead"><span class="num">B.</span>AI-Generated eWOM <span style="color:var(--highlight);font-weight:700;">— new</span></h3>
+                    <p class="body">Persona-driven synthetic content backed by real consumer data — operating as both poster and commenter.</p>
+                </div>
             </div>
-            <div class="rq-box" style="background:#0f3460;">
-                <div class="rq-label">RESEARCH QUESTION 2</div>
-                <p>What variables have <strong>emerged</strong> in AI-generated eWOM in <strong>fashion</strong> and other sectors?</p>
+        </div>
+
+        <div>
+            <div class="rq-block">
+                <div class="rq-num">RQ¹</div>
+                <div>
+                    <div class="rq-label">Research Question One</div>
+                    <div class="rq-body">What are the <strong>specific characteristics</strong> of AI-generated eWOM when explored from existing eWOM attributes?</div>
+                </div>
+            </div>
+            <div class="rq-block">
+                <div class="rq-num">RQ²</div>
+                <div>
+                    <div class="rq-label">Research Question Two</div>
+                    <div class="rq-body">What variables have <strong>emerged</strong> in AI-generated eWOM across <strong>fashion</strong> and other sectors?</div>
+                </div>
+            </div>
+
+            <div class="aside" style="margin-top:32px;">
+                <span class="aside-label">Conceptual Frame</span>
+                We draw on <strong>message volume, credibility, valence</strong> and extend with <strong>analytical thinking, authenticity, originality, product evaluation,</strong> and <strong>persona</strong>.
             </div>
         </div>
     </div>
-    <div class="slide-num">02</div>
+
+    <div class="footer">
+        <span>From Human Buzz to Machine Hype · Wu · Cao · Wu · Hsieh</span>
+        <span class="pg">02 / 13</span>
+    </div>
 </section>
 
-<!-- ===== SLIDE 03 — Persona Definition + HOW IT WORKS with examples ===== -->
+<!-- ===================================================================
+     SLIDE 03 — Persona + HOW IT WORKS (English example)
+     =================================================================== -->
 <section class="slide">
-    <span class="tag tag-purple">KEY CONSTRUCT</span>
-    <h2 class="section-title">Defining <span class="accent">"Persona"</span> in AI-Generated eWOM</h2>
-    <div class="two-col" style="grid-template-columns:0.95fr 1.15fr;gap:40px;">
+    <div class="masthead">
+        <div class="left"><span class="pub">From Human Buzz to Machine Hype</span> &nbsp;·&nbsp; Part I · Concept</div>
+        <div class="right"><span>Key Construct</span><span>Persona Mechanics</span></div>
+    </div>
+
+    <div class="section-label">Plate 03 — Key Construct</div>
+    <h2 class="display">Defining <em>"persona"</em> in AI-generated eWOM.</h2>
+
+    <div class="grid-2-asym">
         <div>
-            <p class="body-text" style="margin-bottom:20px;">
-                <strong>Persona</strong> is defined not as a human identity, but as a <em>coherent synthetic framework</em> encompassing:
+            <p class="lede">
+                <strong>Persona</strong> is defined not as a human identity, but as a <em>coherent synthetic framework</em> encompassing three dimensions —
             </p>
-            <div style="display:flex;flex-direction:column;gap:14px;">
-                <div class="card" style="display:flex;align-items:center;gap:16px;padding:20px 24px;">
-                    <div style="font-size:28px;">🎭</div>
-                    <div><h3 style="font-size:17px;">Specific Traits</h3><p style="font-size:14px;">Character voice, tone, personality</p></div>
+            <hr class="rule" style="margin:24px 0 14px;">
+
+            <div class="var-list">
+                <div class="var-row">
+                    <div class="vn">i.</div>
+                    <div>
+                        <div class="vtitle">Specific Traits</div>
+                        <div class="vdesc">Character voice, tone, personality.</div>
+                    </div>
                 </div>
-                <div class="card" style="display:flex;align-items:center;gap:16px;padding:20px 24px;">
-                    <div style="font-size:28px;">📐</div>
-                    <div><h3 style="font-size:17px;">Expertise Boundaries</h3><p style="font-size:14px;">Domain knowledge scope and limitations</p></div>
+                <div class="var-row">
+                    <div class="vn">ii.</div>
+                    <div>
+                        <div class="vtitle">Expertise Boundaries</div>
+                        <div class="vdesc">Domain knowledge scope and limitations.</div>
+                    </div>
                 </div>
-                <div class="card" style="display:flex;align-items:center;gap:16px;padding:20px 24px;">
-                    <div style="font-size:28px;">🔄</div>
-                    <div><h3 style="font-size:17px;">Behavioral Patterns</h3><p style="font-size:14px;">Consistent response style and engagement logic</p></div>
+                <div class="var-row">
+                    <div class="vn">iii.</div>
+                    <div>
+                        <div class="vtitle">Behavioral Patterns</div>
+                        <div class="vdesc">Consistent response style and engagement logic.</div>
+                    </div>
                 </div>
             </div>
-            <p style="font-size:12px;color:#aaa;margin-top:14px;font-style:italic;">Shanahan et al., 2023; Wan et al., 2025</p>
+            <p class="cite" style="margin-top:14px;">Shanahan et al., 2023; Wan et al., 2025.</p>
         </div>
+
         <div>
-            <p style="font-size:13px;font-weight:700;color:#6C63FF;text-transform:uppercase;letter-spacing:0.12em;margin-bottom:8px;">HOW IT WORKS — Example: Fashion Brand</p>
-            <p style="font-size:13px;color:#888;margin-bottom:18px;font-style:italic;">Pre-set persona "Mia · 28y · sustainable-fashion blogger"</p>
-            <div class="flow-chain">
-                <div class="flow-step">
-                    <div class="step-icon">1</div>
-                    <div>
-                        <div class="step-title">Contextual Priming</div>
-                        <div class="step-example">"New season launch · sustainable cotton · TWD 2,890 · target eco-conscious Gen-Z"</div>
-                    </div>
+            <h3 class="subhead" style="margin-bottom:6px;">How it works — <span style="color:var(--accent);">a worked example</span></h3>
+            <p style="font-family:'Crimson Pro',serif;font-style:italic;font-size:14px;color:var(--ink-3);margin-bottom:18px;">
+                Pre-set persona — "Mia, 28, sustainable-fashion blogger." Brief: launch of a new organic-cotton tee.
+            </p>
+
+            <div class="flow">
+                <div class="flow-item">
+                    <div class="step-label">Step 01 — Contextual Priming</div>
+                    <div class="step-title">Brand &amp; brief context</div>
+                    <div class="step-example">"New-season launch · organic-cotton tee · TWD 2,890 · target eco-conscious Gen-Z women."</div>
                 </div>
-                <div class="flow-arrow-v">↓</div>
-                <div class="flow-step">
-                    <div class="step-icon">2</div>
-                    <div>
-                        <div class="step-title">Domain Expertise Injection</div>
-                        <div class="step-example">Fabric tech · GOTS certification · capsule wardrobe logic · cost-per-wear vocabulary</div>
-                    </div>
+                <div class="flow-item">
+                    <div class="step-label">Step 02 — Domain Expertise Injection</div>
+                    <div class="step-title">Specialist vocabulary &amp; reasoning</div>
+                    <div class="step-example">GOTS certification · fabric weight · capsule-wardrobe logic · cost-per-wear framing.</div>
                 </div>
-                <div class="flow-arrow-v">↓</div>
-                <div class="flow-step">
-                    <div class="step-icon">3</div>
-                    <div>
-                        <div class="step-title">Role-Playing via Dialogue Prompt</div>
-                        <div class="step-example">"You are Mia — casual yet informed tone, mixes Mandarin + English fashion terms, uses ✨ emoji sparingly"</div>
-                    </div>
+                <div class="flow-item">
+                    <div class="step-label">Step 03 — Role-Playing via Dialogue Prompt</div>
+                    <div class="step-title">Pre-established character voice</div>
+                    <div class="step-example">"You are Mia — casual yet informed, uses light Mandarin–English code-switch, sparing emoji, second-person warmth."</div>
                 </div>
-                <div class="flow-arrow-v">↓</div>
-                <div class="flow-step final">
-                    <div class="step-icon">✓</div>
-                    <div>
-                        <div class="step-title">Distinct Digital Narrative — Brand → Consumer</div>
-                        <div class="step-example">"剛入手 X 品牌新季 organic cotton tee，洗了三次都還是挺挺的，cost-per-wear 算下來完全值得 ✨ 給想入坑永續時尚的姐妹參考！"</div>
-                    </div>
+                <div class="flow-item final">
+                    <div class="step-label">Output — Distinct Digital Narrative · Brand → Consumer</div>
+                    <div class="step-title">Generated eWOM (live commercial post)</div>
+                    <div class="step-example">"Just picked up X's new-season organic-cotton tee — washed it three times, still holds its shape. The cost-per-wear math totally checks out. Saving this one for anyone curious about easing into a more sustainable wardrobe."</div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="slide-num">03</div>
+
+    <div class="footer">
+        <span>From Human Buzz to Machine Hype · Wu · Cao · Wu · Hsieh</span>
+        <span class="pg">03 / 13</span>
+    </div>
 </section>
 
-<!-- ===== SLIDE 04 — 8 Variables (redesigned cards) ===== -->
+<!-- ===================================================================
+     SLIDE 04 — Eight Variables
+     =================================================================== -->
 <section class="slide">
-    <span class="tag tag-purple">CONCEPTUAL MODEL</span>
-    <h2 class="section-title">Eight Variables of AI-Generated eWOM</h2>
-    <div class="two-col" style="grid-template-columns:1fr 1fr;gap:40px;">
+    <div class="masthead">
+        <div class="left"><span class="pub">From Human Buzz to Machine Hype</span> &nbsp;·&nbsp; Part I · Concept</div>
+        <div class="right"><span>Conceptual Model</span><span>Eight Variables</span></div>
+    </div>
+
+    <div class="section-label">Plate 04 — Conceptual Model</div>
+    <h2 class="display">Eight variables of <em>AI-generated eWOM.</em></h2>
+
+    <div class="grid-2" style="gap:56px;">
         <div>
-            <div class="var-section-label" style="color:#6C63FF;">
-                <span class="dot" style="background:#6C63FF;"></span>From Established eWOM Literature
+            <h3 class="subhead"><span class="num">I.</span>From Established eWOM Literature</h3>
+            <hr class="rule-thick" style="margin:0 0 4px;">
+            <div class="var-list classic">
+                <div class="var-row">
+                    <div class="vn">01</div>
+                    <div>
+                        <div class="vtitle">Message Volume</div>
+                        <div class="vdesc">Amount of brand-related information; visibility and cognitive-processing potential.</div>
+                    </div>
+                </div>
+                <div class="var-row">
+                    <div class="vn">02</div>
+                    <div>
+                        <div class="vtitle">Credibility</div>
+                        <div class="vdesc">Perceived trustworthiness, competence, and honesty of the source.</div>
+                    </div>
+                </div>
+                <div class="var-row">
+                    <div class="vn">03</div>
+                    <div>
+                        <div class="vtitle">Valence</div>
+                        <div class="vdesc">Emotional attitude — positive, negative, or mixed — toward the brand.</div>
+                    </div>
+                </div>
             </div>
-            <div style="display:flex;flex-direction:column;gap:12px;">
-                <div class="var-card classic">
-                    <div class="var-num">1</div>
-                    <div><h4>Message Volume</h4><p>Amount of brand-related information; visibility and cognitive processing potential</p></div>
-                </div>
-                <div class="var-card classic">
-                    <div class="var-num">2</div>
-                    <div><h4>Credibility</h4><p>Perceived trustworthiness, competence, and honesty of the source</p></div>
-                </div>
-                <div class="var-card classic">
-                    <div class="var-num">3</div>
-                    <div><h4>Valence</h4><p>Emotional attitude — positive, negative, or mixed — toward the brand</p></div>
-                </div>
-            </div>
-            <p style="font-size:12px;color:#aaa;margin-top:14px;font-style:italic;">Mehrabian & Russell, 1974; Petty & Cacioppo, 1986; Hung et al., 2023</p>
+            <p class="cite" style="margin-top:14px;">Mehrabian &amp; Russell, 1974; Petty &amp; Cacioppo, 1986; Hung et al., 2023.</p>
         </div>
+
         <div>
-            <div class="var-section-label" style="color:#e74c3c;">
-                <span class="dot" style="background:#e74c3c;"></span>Extended for AI-Generated eWOM
+            <h3 class="subhead"><span class="num">II.</span>Extended for AI-Generated eWOM</h3>
+            <hr class="rule-thick" style="margin:0 0 4px;">
+            <div class="var-list extended">
+                <div class="var-row">
+                    <div class="vn">04</div>
+                    <div>
+                        <div class="vtitle">Analytical Thinking</div>
+                        <div class="vdesc">Logicality, rigor, and hierarchical organization in expression.</div>
+                    </div>
+                </div>
+                <div class="var-row">
+                    <div class="vn">05</div>
+                    <div>
+                        <div class="vtitle">Authenticity</div>
+                        <div class="vdesc"><em>"Sense of personal real experience"</em> conveyed by the text.</div>
+                    </div>
+                </div>
+                <div class="var-row">
+                    <div class="vn">06</div>
+                    <div>
+                        <div class="vtitle">Originality</div>
+                        <div class="vdesc">Unique, non-repetitive, non-templated content.</div>
+                    </div>
+                </div>
+                <div class="var-row">
+                    <div class="vn">07</div>
+                    <div>
+                        <div class="vtitle">Product Evaluation</div>
+                        <div class="vdesc">Specific assessment of quality, design, and cost-effectiveness.</div>
+                    </div>
+                </div>
+                <div class="var-row">
+                    <div class="vn">08</div>
+                    <div>
+                        <div class="vtitle">Persona</div>
+                        <div class="vdesc">Coherent synthetic identity — traits, expertise, behavioral patterns.</div>
+                    </div>
+                </div>
             </div>
-            <div style="display:flex;flex-direction:column;gap:10px;">
-                <div class="var-card extended">
-                    <div class="var-num">4</div>
-                    <div><h4>Analytical Thinking</h4><p>Logicality, rigor, and hierarchical organization in expression</p></div>
-                </div>
-                <div class="var-card extended">
-                    <div class="var-num">5</div>
-                    <div><h4>Authenticity</h4><p>"Sense of personal real experience" conveyed by the text</p></div>
-                </div>
-                <div class="var-card extended">
-                    <div class="var-num">6</div>
-                    <div><h4>Originality</h4><p>Unique, non-repetitive, non-templated content</p></div>
-                </div>
-                <div class="var-card extended">
-                    <div class="var-num">7</div>
-                    <div><h4>Product Evaluation</h4><p>Specific assessment of quality, design, cost-effectiveness</p></div>
-                </div>
-                <div class="var-card extended">
-                    <div class="var-num">8</div>
-                    <div><h4>Persona</h4><p>Coherent synthetic identity — traits, expertise, behavioral patterns</p></div>
-                </div>
-            </div>
-            <p style="font-size:12px;color:#aaa;margin-top:10px;font-style:italic;">Pennebaker et al., 2014; Boardman et al., 2022; Shanahan et al., 2023</p>
+            <p class="cite" style="margin-top:14px;">Pennebaker et al., 2014; Boardman et al., 2022; Shanahan et al., 2023.</p>
         </div>
     </div>
-    <div class="slide-num">04</div>
+
+    <div class="footer">
+        <span>From Human Buzz to Machine Hype · Wu · Cao · Wu · Hsieh</span>
+        <span class="pg">04 / 13</span>
+    </div>
 </section>
 
-<!-- ===== SLIDE 05 — Relationship Framework as TABLES ===== -->
+<!-- ===================================================================
+     SLIDE 05 — Relationship Framework (tables)
+     =================================================================== -->
 <section class="slide">
-    <span class="tag tag-purple">CONCEPTUAL MODEL</span>
-    <h2 class="section-title">Relationship Framework</h2>
-    <div class="two-col" style="grid-template-columns:1.1fr 0.9fr;gap:36px;">
+    <div class="masthead">
+        <div class="left"><span class="pub">From Human Buzz to Machine Hype</span> &nbsp;·&nbsp; Part I · Concept</div>
+        <div class="right"><span>Relationship Framework</span><span>Tabula I – III</span></div>
+    </div>
+
+    <div class="section-label">Plate 05 — Relationship Framework</div>
+    <h2 class="display">How the variables <em>hold together.</em></h2>
+
+    <div class="grid-2" style="gap:48px;">
         <div>
-            <p style="font-size:14px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:12px;">Bivariate Correlations with Authenticity</p>
-            <table class="data-table">
+            <h3 class="subhead">Tabula I — Bivariate Correlation with Authenticity</h3>
+            <table class="editorial">
                 <thead>
-                    <tr><th>Variable</th><th style="text-align:center;">r</th><th style="text-align:center;">Strength</th></tr>
+                    <tr><th>Variable</th><th class="num-col">r</th><th class="num-col">Strength</th></tr>
                 </thead>
                 <tbody>
-                    <tr><td class="var-cell">Originality</td><td style="text-align:center;font-weight:700;color:#6C63FF;">.63***</td><td style="text-align:center;">Strong</td></tr>
-                    <tr><td class="var-cell">Persona</td><td style="text-align:center;font-weight:700;color:#6C63FF;">.50***</td><td style="text-align:center;">Strong</td></tr>
-                    <tr><td class="var-cell">Product Evaluation</td><td style="text-align:center;font-weight:700;color:#6C63FF;">.45***</td><td style="text-align:center;">Moderate</td></tr>
+                    <tr><td class="var-name">Originality</td><td class="num-cell">.63 ***</td><td class="num-cell note">Strong</td></tr>
+                    <tr><td class="var-name">Persona</td><td class="num-cell">.50 ***</td><td class="num-cell note">Strong</td></tr>
+                    <tr><td class="var-name">Product Evaluation</td><td class="num-cell">.45 ***</td><td class="num-cell note">Moderate</td></tr>
                 </tbody>
             </table>
-            <p style="font-size:14px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:0.1em;margin:24px 0 12px;">Other Salient Correlations</p>
-            <table class="data-table">
+
+            <h3 class="subhead" style="margin-top:36px;">Tabula II — Other Salient Correlations</h3>
+            <table class="editorial">
                 <tbody>
-                    <tr><td class="var-cell">Product Evaluation ↔ Msg Volume</td><td style="text-align:right;font-weight:700;color:#e74c3c;">r = .63***</td></tr>
-                    <tr><td class="var-cell">Originality ↔ Persona</td><td style="text-align:right;font-weight:700;color:#e74c3c;">r = .57***</td></tr>
+                    <tr><td class="var-name">Product Eval ↔ Message Volume</td><td class="num-cell">r = .63 ***</td></tr>
+                    <tr><td class="var-name">Originality ↔ Persona</td><td class="num-cell">r = .57 ***</td></tr>
                 </tbody>
             </table>
         </div>
+
         <div>
-            <p style="font-size:14px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:12px;">Multiple Regression — Predicting Authenticity</p>
-            <table class="data-table">
+            <h3 class="subhead">Tabula III — Multiple Regression Predicting Authenticity</h3>
+            <table class="editorial">
                 <thead>
-                    <tr><th>Predictor</th><th style="text-align:center;">β</th></tr>
+                    <tr><th>Predictor</th><th class="num-col">β</th><th class="num-col">p</th></tr>
                 </thead>
                 <tbody>
-                    <tr class="accent-row"><td class="var-cell">Originality</td><td style="text-align:center;font-weight:800;color:#6C63FF;font-size:18px;">.46***</td></tr>
-                    <tr><td class="var-cell">Product Evaluation</td><td style="text-align:center;font-weight:700;">.21***</td></tr>
-                    <tr><td class="var-cell">Valence</td><td style="text-align:center;font-weight:700;">.12***</td></tr>
-                    <tr><td class="var-cell">Credibility</td><td style="text-align:center;font-weight:700;">.12***</td></tr>
+                    <tr class="highlight"><td class="var-name">Originality</td><td class="num-cell">.46</td><td class="num-cell note">&lt; .001</td></tr>
+                    <tr><td class="var-name">Product Evaluation</td><td class="num-cell">.21</td><td class="num-cell note">&lt; .001</td></tr>
+                    <tr><td class="var-name">Valence</td><td class="num-cell">.12</td><td class="num-cell note">&lt; .001</td></tr>
+                    <tr><td class="var-name">Credibility</td><td class="num-cell">.12</td><td class="num-cell note">&lt; .001</td></tr>
                 </tbody>
             </table>
-            <div class="highlight-box" style="margin-top:20px;">
-                <p style="font-size:15px;"><strong>Fashion sector salience:</strong> Persona & Analytical Thinking score higher than Beauty — driving deeper narrative engagement.</p>
+
+            <div class="aside" style="margin-top:28px;">
+                <span class="aside-label">Sector Salience</span>
+                Within the <strong>Fashion</strong> sector, persona and analytical thinking score higher than in Beauty — driving deeper narrative engagement.
             </div>
-            <p style="text-align:left;margin-top:14px;font-size:12px;color:#aaa;font-style:italic;">*** p < .001 · All 8 variables positively correlated</p>
+
+            <p class="cite" style="margin-top:12px;">*** p &lt; .001 · all eight variables positively correlated.</p>
         </div>
     </div>
-    <div class="slide-num">05</div>
+
+    <div class="footer">
+        <span>From Human Buzz to Machine Hype · Wu · Cao · Wu · Hsieh</span>
+        <span class="pg">05 / 13</span>
+    </div>
 </section>
 
-<!-- ===== SLIDE 06 — Section: Method ===== -->
-<section class="slide divider">
-    <div class="label">Part II</div>
-    <h2>Methodology</h2>
-    <div class="underline"></div>
-    <div class="slide-num" style="color:rgba(255,255,255,0.2)">06</div>
+<!-- ===================================================================
+     SLIDE 06 — Divider · Methodology
+     =================================================================== -->
+<section class="slide divider-page">
+    <div class="masthead">
+        <div class="left"><span class="pub">From Human Buzz to Machine Hype</span> &nbsp;·&nbsp; Part II · Method</div>
+        <div class="right"><span>Section Divider</span></div>
+    </div>
+
+    <div class="part-label">— Part II —</div>
+    <h2><em>Methodology.</em></h2>
+    <p class="quote">
+        "Each post included in the study underwent a rigorous human-in-the-loop verification workflow to ensure quality and authenticity."
+    </p>
+
+    <div class="footer">
+        <span>Part II opens overleaf</span>
+        <span class="pg">06 / 13</span>
+    </div>
 </section>
 
-<!-- ===== SLIDE 07 — Research Design ===== -->
+<!-- ===================================================================
+     SLIDE 07 — Research Design
+     =================================================================== -->
 <section class="slide">
-    <span class="tag tag-blue">RESEARCH DESIGN</span>
-    <h2 class="section-title">Dataset Overview</h2>
-    <div class="stat-grid">
-        <div class="stat-card">
-            <div class="num">997</div>
-            <div class="desc">AI-Generated Posts & Replies<br>analyzed in total (census data)</div>
-        </div>
-        <div class="stat-card">
-            <div class="num">3</div>
-            <div class="desc">Industry Sectors<br>Fashion · Beauty · 3C / Consumer Electronics</div>
-        </div>
-        <div class="stat-card">
-            <div class="num">3</div>
-            <div class="desc">Platforms<br>Threads · Facebook · Dcard</div>
-        </div>
+    <div class="masthead">
+        <div class="left"><span class="pub">From Human Buzz to Machine Hype</span> &nbsp;·&nbsp; Part II · Method</div>
+        <div class="right"><span>Research Design</span><span>Dataset Overview</span></div>
     </div>
-    <div class="two-col" style="margin-top:36px;gap:36px;">
-        <div>
-            <p style="font-size:14px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:14px;">Sector Distribution</p>
-            <div style="display:flex;gap:10px;">
-                <div style="flex:222;background:linear-gradient(135deg,#6C63FF,#5849f0);border-radius:10px;padding:18px 14px;color:#fff;text-align:center;font-weight:700;font-size:15px;box-shadow:0 4px 12px rgba(108,99,255,0.25);">Fashion<br><span style="font-size:20px;">22.2%</span></div>
-                <div style="flex:408;background:linear-gradient(135deg,#e74c3c,#d63a2b);border-radius:10px;padding:18px 14px;color:#fff;text-align:center;font-weight:700;font-size:15px;box-shadow:0 4px 12px rgba(231,76,60,0.25);">Beauty & Skincare<br><span style="font-size:20px;">40.8%</span></div>
-                <div style="flex:370;background:linear-gradient(135deg,#f39c12,#e08906);border-radius:10px;padding:18px 14px;color:#fff;text-align:center;font-weight:700;font-size:15px;box-shadow:0 4px 12px rgba(243,156,18,0.25);">3C / Consumer Electronics<br><span style="font-size:20px;">37.0%</span></div>
-            </div>
-        </div>
-        <div>
-            <p style="font-size:14px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:14px;">Data Provenance</p>
-            <div class="card">
-                <p style="font-size:15px;">Exclusive use of <strong>proprietary, human-verified eWOM database</strong> from internal high-performance marketing operations — eliminating organic noise. All 997 posts were deployed in <strong>live commercial operations</strong> in Taiwan.</p>
-            </div>
-        </div>
-    </div>
-    <div class="slide-num">07</div>
-</section>
 
-<!-- ===== SLIDE 08 — Technical Approach: SFT ===== -->
-<section class="slide">
-    <span class="tag tag-red">TECHNICAL APPROACH</span>
-    <h2 class="section-title">Supervised Fine-Tuning &<br><span class="accent">Reinforcement Fine-Tuning</span></h2>
-    <div class="two-col" style="gap:44px;">
+    <div class="section-label">Plate 07 — Research Design</div>
+    <h2 class="display">Dataset overview.</h2>
+
+    <div class="figure-grid" style="border-top:2px solid var(--ink);border-bottom:1px solid var(--rule);">
+        <div class="figure-cell">
+            <div class="fig-num">997</div>
+            <div class="fig-unit">Posts &amp; Replies</div>
+            <div class="fig-desc">AI-generated, analyzed in total — full census, no sampling.</div>
+        </div>
+        <div class="figure-cell">
+            <div class="fig-num">3</div>
+            <div class="fig-unit">Industry Sectors</div>
+            <div class="fig-desc">Fashion · Beauty &amp; Skincare · 3C / Consumer Electronics.</div>
+        </div>
+        <div class="figure-cell">
+            <div class="fig-num">3</div>
+            <div class="fig-unit">Platforms</div>
+            <div class="fig-desc">Threads · Facebook Group · Dcard (anonymous forum).</div>
+        </div>
+    </div>
+
+    <div class="grid-2" style="margin-top:40px;gap:48px;">
         <div>
-            <p class="body-text" style="margin-bottom:24px;">
-                Our AI-generated eWOM was produced through a rigorous <strong>SFT pipeline</strong> with reinforcement learning — not simple prompt engineering:
+            <h3 class="subhead">Sector Distribution</h3>
+            <div class="sector-bar">
+                <div class="s-fashion">Fashion · 22.2%</div>
+                <div class="s-beauty">Beauty &amp; Skincare · 40.8%</div>
+                <div class="s-3c">3C / Consumer Electronics · 37.0%</div>
+            </div>
+            <div class="sector-meta">
+                <div class="m-fashion">n ≈ 222</div>
+                <div class="m-beauty">n ≈ 408</div>
+                <div class="m-3c">n ≈ 370</div>
+            </div>
+        </div>
+        <div>
+            <h3 class="subhead">Data Provenance</h3>
+            <p class="body">
+                Exclusive use of a <strong>proprietary, human-verified eWOM database</strong> drawn from internal high-performance marketing operations — eliminating organic noise. All 997 posts were deployed in <strong>live commercial operations</strong> in Taiwan, 2025.
             </p>
-            <div style="display:flex;flex-direction:column;gap:18px;">
-                <div class="method-step">
-                    <div class="step-num">1</div>
-                    <div class="step-content">
-                        <h3>Proprietary Data</h3>
-                        <p>Human-verified eWOM database from internal marketing operations — eliminating organic noise</p>
-                    </div>
-                </div>
-                <div class="method-step">
-                    <div class="step-num">2</div>
-                    <div class="step-content">
-                        <h3>Internalization</h3>
-                        <p>Non-verified insights are internalized rather than directly quoted — ensuring original synthesis</p>
-                    </div>
-                </div>
-                <div class="method-step">
-                    <div class="step-num">3</div>
-                    <div class="step-content">
-                        <h3>Generalization</h3>
-                        <p>Cross-brand and cross-category adaptability while maintaining persona consistency</p>
-                    </div>
-                </div>
-                <div class="method-step">
-                    <div class="step-num">4</div>
-                    <div class="step-content">
-                        <h3>Strategic Labeling</h3>
-                        <p><strong>Latent writing strategies and tactical angles</strong> encoded as training signals — learning implicit persuasion patterns</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div>
-            <div style="background:linear-gradient(135deg,#1a1a2e,#0f3460);border-radius:18px;padding:36px;color:#fff;box-shadow:0 8px 32px rgba(26,26,46,0.2);">
-                <p style="font-size:14px;font-weight:700;letter-spacing:0.12em;color:rgba(255,255,255,0.45);margin-bottom:20px;">SFT vs. PROMPT ENGINEERING</p>
-                <div style="display:flex;flex-direction:column;gap:18px;">
-                    <div style="background:rgba(255,255,255,0.06);border-radius:12px;padding:20px;">
-                        <p style="font-size:14px;color:rgba(255,255,255,0.5);margin-bottom:6px;font-weight:600;">❌ Prompt Engineering Only</p>
-                        <p style="font-size:15px;">Generic outputs, inconsistent persona, limited domain depth</p>
-                    </div>
-                    <div style="background:rgba(108,99,255,0.2);border:1px solid rgba(108,99,255,0.4);border-radius:12px;padding:20px;">
-                        <p style="font-size:14px;color:#a5a0ff;margin-bottom:6px;font-weight:600;">✅ SFT + Reinforcement Fine-Tuning</p>
-                        <p style="font-size:15px;">Persona-consistent, domain-aware, human-like quality verified by HITL</p>
-                    </div>
-                </div>
-                <div style="margin-top:24px;padding-top:20px;border-top:1px solid rgba(255,255,255,0.1);">
-                    <p style="font-size:18px;font-weight:700;color:#fff;line-height:1.5;">High-quality eWOM deployed in<br><span style="color:#6C63FF;">live commercial operations</span></p>
-                </div>
-            </div>
         </div>
     </div>
-    <div class="slide-num">08</div>
+
+    <div class="footer">
+        <span>From Human Buzz to Machine Hype · Wu · Cao · Wu · Hsieh</span>
+        <span class="pg">07 / 13</span>
+    </div>
 </section>
 
-<!-- ===== SLIDE 09 — Chain-of-Thought Training ===== -->
+<!-- ===================================================================
+     SLIDE 08 — SFT & Reinforcement Fine-Tuning
+     =================================================================== -->
 <section class="slide">
-    <span class="tag tag-red">PROPRIETARY TECHNIQUE</span>
-    <h2 class="section-title">Chain-of-Thought <span class="accent">Model Training</span></h2>
-    <div class="two-col" style="align-items:center;gap:48px;">
+    <div class="masthead">
+        <div class="left"><span class="pub">From Human Buzz to Machine Hype</span> &nbsp;·&nbsp; Part II · Method</div>
+        <div class="right"><span>Technical Approach</span><span>SFT &amp; Reinforcement</span></div>
+    </div>
+
+    <div class="section-label">Plate 08 — Technical Approach</div>
+    <h2 class="display">Supervised &amp; <em>reinforcement fine-tuning.</em></h2>
+
+    <div class="grid-2-asym">
         <div>
-            <p class="body-text" style="margin-bottom:28px;">
-                Our proprietary CoT training structures the generation process around three pillars:
+            <p class="lede">
+                Our AI-generated eWOM was produced through a rigorous <strong>SFT pipeline</strong> with reinforcement learning — <em>not</em> simple prompt engineering.
             </p>
-            <div style="display:grid;grid-template-columns:1fr;gap:16px;">
-                <div class="pillar-card" style="border-top-color:#6C63FF;">
-                    <div class="icon">📦</div>
-                    <h3>Product Info</h3>
-                    <p>Structured product attributes, pricing, positioning, competitive context</p>
-                </div>
-                <div class="pillar-card" style="border-top-color:#e74c3c;">
-                    <div class="icon">✍️</div>
-                    <h3>Author's Persona</h3>
-                    <p>Pre-defined traits, tone, expertise level, behavioral consistency</p>
-                </div>
-                <div class="pillar-card" style="border-top-color:#f39c12;">
-                    <div class="icon">💬</div>
-                    <h3>Storyline</h3>
-                    <p>The strategic bridge between brand promotion and natural consumer reception</p>
-                </div>
-            </div>
-            <div class="highlight-box" style="margin-top:24px;">
-                <p>The model learns to <strong>reason through</strong> these three pillars before generating — not just pattern-match on surface text.</p>
-            </div>
-        </div>
-        <div class="img-container">
-            <img src="./assets/cot_training.png" alt="Chain-of-Thought Model Training">
-            <p style="font-size:12px;color:#aaa;margin-top:10px;font-style:italic;">© Accucrazy — Proprietary CoT Training Architecture</p>
-        </div>
-    </div>
-    <div class="slide-num">09</div>
-</section>
+            <hr class="rule" style="margin:24px 0 8px;">
 
-<!-- ===== SLIDE 10 — HITL + Coding Reliability ===== -->
-<section class="slide">
-    <span class="tag tag-blue">QUALITY ASSURANCE</span>
-    <h2 class="section-title">Human-in-the-Loop & <span class="accent">Coding Reliability</span></h2>
-    <div class="two-col" style="gap:40px;">
-        <div>
-            <p style="font-size:14px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:18px;">Verification Workflow</p>
-            <div style="display:flex;align-items:center;gap:6px;justify-content:center;flex-wrap:wrap;margin-bottom:24px;">
-                <div style="background:#f0f0ff;border:2px solid #d5d3ff;border-radius:12px;padding:14px 18px;text-align:center;font-size:13px;font-weight:700;min-width:118px;">🤖 AI Gen<br><span style="font-size:11px;color:#888;font-weight:500;">SFT + CoT</span></div>
-                <div style="color:#bbb;font-size:20px;">→</div>
-                <div style="background:#f0f0ff;border:2px solid #d5d3ff;border-radius:12px;padding:14px 18px;text-align:center;font-size:13px;font-weight:700;min-width:118px;">👤 Human<br><span style="font-size:11px;color:#888;font-weight:500;">Review</span></div>
-                <div style="color:#bbb;font-size:20px;">→</div>
-                <div style="background:#f0f0ff;border:2px solid #d5d3ff;border-radius:12px;padding:14px 18px;text-align:center;font-size:13px;font-weight:700;min-width:118px;">🔄 Feedback<br><span style="font-size:11px;color:#888;font-weight:500;">Reinforce</span></div>
-                <div style="color:#bbb;font-size:20px;">→</div>
-                <div style="background:linear-gradient(135deg,#6C63FF,#5849f0);color:#fff;border:2px solid #6C63FF;border-radius:12px;padding:14px 18px;text-align:center;font-size:13px;font-weight:700;min-width:118px;">✅ Deployed<br><span style="font-size:11px;opacity:0.8;font-weight:500;">Live</span></div>
-            </div>
-            <div style="display:flex;gap:14px;margin-top:18px;">
-                <div class="card" style="flex:1;">
-                    <h3>Census Data</h3>
-                    <p>The <strong>complete set</strong> of all market-ready AI-generated eWOM — not a sample</p>
+            <div class="var-list">
+                <div class="var-row">
+                    <div class="vn">01</div>
+                    <div>
+                        <div class="vtitle">Proprietary Data</div>
+                        <div class="vdesc">Human-verified eWOM database from internal marketing operations — eliminating organic noise.</div>
+                    </div>
                 </div>
-                <div class="card" style="flex:1;">
-                    <h3>Posts + Replies</h3>
-                    <p>Both analyzed collectively as <strong>synthetic communication</strong></p>
+                <div class="var-row">
+                    <div class="vn">02</div>
+                    <div>
+                        <div class="vtitle">Internalization</div>
+                        <div class="vdesc">Non-verified insights are internalized rather than directly quoted — ensuring original synthesis.</div>
+                    </div>
+                </div>
+                <div class="var-row">
+                    <div class="vn">03</div>
+                    <div>
+                        <div class="vtitle">Generalization</div>
+                        <div class="vdesc">Cross-brand and cross-category adaptability while maintaining persona consistency.</div>
+                    </div>
+                </div>
+                <div class="var-row">
+                    <div class="vn">04</div>
+                    <div>
+                        <div class="vtitle">Strategic Labeling</div>
+                        <div class="vdesc"><em>Latent writing strategies and tactical angles</em> encoded as training signals — learning implicit persuasion patterns.</div>
+                    </div>
                 </div>
             </div>
         </div>
+
         <div>
-            <p style="font-size:14px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px;">Inter-Coder Reliability (Krippendorff's α)</p>
-            <p style="font-size:13px;color:#666;margin-bottom:14px;">3 rounds of coder training · 2 trained human coders · all 997 posts</p>
-            <div class="alpha-grid">
-                <div class="alpha-item"><div class="name">Originality</div><div class="val alpha-good">.857</div></div>
-                <div class="alpha-item"><div class="name">Valence</div><div class="val alpha-good">.800</div></div>
-                <div class="alpha-item"><div class="name">Msg Volume</div><div class="val alpha-good">.790</div></div>
-                <div class="alpha-item"><div class="name">Analytical</div><div class="val alpha-ok">.693</div></div>
-                <div class="alpha-item"><div class="name">Credibility</div><div class="val alpha-ok">.690</div></div>
-                <div class="alpha-item"><div class="name">Authenticity</div><div class="val alpha-ok">.687</div></div>
-                <div class="alpha-item"><div class="name">Persona</div><div class="val alpha-ok">.661</div></div>
-                <div class="alpha-item"><div class="name">Product Eval</div><div class="val alpha-ok">.607</div></div>
+            <h3 class="subhead">SFT vs. Prompt Engineering</h3>
+            <hr class="rule-thick" style="margin:0 0 18px;">
+
+            <div style="padding:20px 22px;border:1px solid var(--rule);background:var(--paper);">
+                <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--ink-3);margin-bottom:6px;">Prompt Engineering Only</div>
+                <p style="font-family:'Crimson Pro',serif;font-size:17px;line-height:1.5;color:var(--ink-2);font-style:italic;">
+                    Generic outputs, inconsistent persona, limited domain depth.
+                </p>
             </div>
-            <div style="display:flex;gap:18px;margin-top:14px;">
-                <div style="display:flex;align-items:center;gap:8px;"><div style="width:12px;height:12px;border-radius:3px;background:#27ae60;"></div><span style="font-size:13px;color:#666;">≥ .750 Excellent</span></div>
-                <div style="display:flex;align-items:center;gap:8px;"><div style="width:12px;height:12px;border-radius:3px;background:#f39c12;"></div><span style="font-size:13px;color:#666;">≥ .600 Acceptable</span></div>
+
+            <div style="text-align:center;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink-3);letter-spacing:0.2em;margin:12px 0;">vs.</div>
+
+            <div style="padding:20px 22px;border:1px solid var(--accent);background:var(--paper);position:relative;">
+                <div style="position:absolute;top:-9px;left:18px;background:var(--bg);padding:0 8px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--accent);font-weight:700;">Our Approach</div>
+                <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--accent);margin-bottom:6px;font-weight:600;">SFT + Reinforcement Fine-Tuning</div>
+                <p style="font-family:'Crimson Pro',serif;font-size:17px;line-height:1.5;color:var(--ink);">
+                    Persona-consistent, domain-aware, human-like quality verified by <strong>HITL</strong>.
+                </p>
+            </div>
+
+            <div class="aside" style="margin-top:28px;">
+                <span class="aside-label">Commercial Validity</span>
+                All 997 posts have been deployed in <strong>live commercial operations</strong> — not academic prototypes.
             </div>
         </div>
     </div>
-    <div class="slide-num">10</div>
+
+    <div class="footer">
+        <span>From Human Buzz to Machine Hype · Wu · Cao · Wu · Hsieh</span>
+        <span class="pg">08 / 13</span>
+    </div>
 </section>
 
-<!-- ===== SLIDE 11 — Analysis Strategy ===== -->
+<!-- ===================================================================
+     SLIDE 09 — Chain-of-Thought Training
+     =================================================================== -->
 <section class="slide">
-    <span class="tag tag-green">ANALYSIS STRATEGY</span>
-    <h2 class="section-title">Statistical Methods</h2>
-    <div style="max-width:920px;">
-        <div style="display:flex;flex-direction:column;gap:22px;">
-            <div class="card" style="display:flex;gap:24px;align-items:flex-start;padding:26px 30px;">
-                <div style="width:56px;height:56px;border-radius:14px;background:rgba(108,99,255,0.12);display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0;">📊</div>
-                <div>
-                    <h3 style="font-size:19px;">Bivariate Pearson Correlations</h3>
-                    <p style="font-size:16px;color:#555;line-height:1.65;">Assess pairwise correlations among the 8 primary variables → identify the interconnected nature of message characteristics</p>
+    <div class="masthead">
+        <div class="left"><span class="pub">From Human Buzz to Machine Hype</span> &nbsp;·&nbsp; Part II · Method</div>
+        <div class="right"><span>Proprietary Technique</span><span>CoT Training</span></div>
+    </div>
+
+    <div class="section-label">Plate 09 — Proprietary Technique</div>
+    <h2 class="display">Chain-of-Thought <em>model training.</em></h2>
+
+    <div class="grid-2-asym" style="align-items:center;">
+        <div>
+            <p class="lede">
+                Our proprietary CoT training structures the generation process around <em>three pillars</em> — the model reasons through each before producing output.
+            </p>
+
+            <div style="margin-top:24px;">
+                <div class="pillar-row">
+                    <div class="p-num">i.</div>
+                    <div>
+                        <h4>Product Info</h4>
+                        <p>Structured product attributes, pricing, positioning, and competitive context.</p>
+                    </div>
+                </div>
+                <div class="pillar-row">
+                    <div class="p-num">ii.</div>
+                    <div>
+                        <h4>Author's Persona</h4>
+                        <p>Pre-defined traits, tone, expertise level, and behavioral consistency.</p>
+                    </div>
+                </div>
+                <div class="pillar-row">
+                    <div class="p-num">iii.</div>
+                    <div>
+                        <h4>Storyline</h4>
+                        <p>The <em>strategic bridge</em> between brand promotion and natural consumer reception.</p>
+                    </div>
                 </div>
             </div>
-            <div class="card" style="display:flex;gap:24px;align-items:flex-start;padding:26px 30px;">
-                <div style="width:56px;height:56px;border-radius:14px;background:rgba(231,76,60,0.12);display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0;">📈</div>
-                <div>
-                    <h3 style="font-size:19px;">Multiple Linear Regression</h3>
-                    <p style="font-size:16px;color:#555;line-height:1.65;">Predict <strong>Authenticity</strong> → Originality (β=.46), Product Eval (β=.21), Valence (β=.12), Credibility (β=.12)</p>
+
+            <div class="aside">
+                <span class="aside-label">Why this matters</span>
+                The model learns to <strong>reason through</strong> these three pillars before generating — not merely pattern-match on surface text.
+            </div>
+        </div>
+
+        <figure style="margin:0;">
+            <div style="border:1px solid var(--rule);background:var(--paper);padding:16px;">
+                <img src="./assets/cot_training.png" alt="Chain-of-Thought Model Training" style="width:100%;display:block;">
+            </div>
+            <figcaption class="cite" style="margin-top:10px;text-align:center;">
+                Figure 1 — Proprietary CoT Training Architecture · © Accucrazy.
+            </figcaption>
+        </figure>
+    </div>
+
+    <div class="footer">
+        <span>From Human Buzz to Machine Hype · Wu · Cao · Wu · Hsieh</span>
+        <span class="pg">09 / 13</span>
+    </div>
+</section>
+
+<!-- ===================================================================
+     SLIDE 10 — HITL + Coding Reliability
+     =================================================================== -->
+<section class="slide">
+    <div class="masthead">
+        <div class="left"><span class="pub">From Human Buzz to Machine Hype</span> &nbsp;·&nbsp; Part II · Method</div>
+        <div class="right"><span>Quality Assurance</span><span>Reliability</span></div>
+    </div>
+
+    <div class="section-label">Plate 10 — Quality Assurance</div>
+    <h2 class="display">Human-in-the-loop &amp; <em>coding reliability.</em></h2>
+
+    <div class="grid-2" style="gap:48px;">
+        <div>
+            <h3 class="subhead">Verification Workflow</h3>
+            <div class="workflow">
+                <div class="wf-step">
+                    <div class="wf-num">01</div>
+                    <div class="wf-title">AI Gen</div>
+                    <div class="wf-sub">SFT + CoT</div>
+                </div>
+                <div class="wf-step">
+                    <div class="wf-num">02</div>
+                    <div class="wf-title">Human</div>
+                    <div class="wf-sub">Review</div>
+                </div>
+                <div class="wf-step">
+                    <div class="wf-num">03</div>
+                    <div class="wf-title">Feedback</div>
+                    <div class="wf-sub">Reinforce</div>
+                </div>
+                <div class="wf-step">
+                    <div class="wf-num">04</div>
+                    <div class="wf-title">Deployed</div>
+                    <div class="wf-sub">Live</div>
                 </div>
             </div>
-            <div class="card" style="display:flex;gap:24px;align-items:flex-start;padding:26px 30px;">
-                <div style="width:56px;height:56px;border-radius:14px;background:rgba(39,174,96,0.12);display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0;">⚖️</div>
+
+            <div class="grid-2" style="margin-top:28px;gap:24px;">
                 <div>
-                    <h3 style="font-size:19px;">One-Way ANOVA</h3>
-                    <p style="font-size:16px;color:#555;line-height:1.65;">Differences across <strong>3 sectors</strong> (Fashion / Beauty / 3C) on all 8 variables</p>
+                    <h3 class="subhead">Census Data</h3>
+                    <p class="body">The <strong>complete set</strong> of all market-ready AI-generated eWOM — not a sample.</p>
+                </div>
+                <div>
+                    <h3 class="subhead">Posts + Replies</h3>
+                    <p class="body">Both analyzed collectively as <strong>synthetic communication</strong>.</p>
                 </div>
             </div>
         </div>
-        <div class="highlight-box" style="margin-top:28px;border-left-color:#f39c12;">
-            <p><strong>Discussion Note — Contextual Data Mirroring:</strong> Lower scores in Fashion and 3C reflect <em>real-world social media dynamics</em> — inherent market engagement benchmarks, <strong>not model limitations</strong>. The fine-tuned model faithfully mirrors the linguistic patterns of its target market.</p>
+
+        <div>
+            <h3 class="subhead">Inter-Coder Reliability — Krippendorff's α</h3>
+            <p style="font-family:'Crimson Pro',serif;font-style:italic;font-size:14px;color:var(--ink-3);margin-bottom:14px;">
+                Three rounds of coder training · two trained human coders · all 997 posts.
+            </p>
+
+            <div class="alpha-figs" style="border:1px solid var(--rule-soft);">
+                <div class="alpha-fig good"><div class="a-name">Originality</div><div class="a-val">.857</div></div>
+                <div class="alpha-fig good"><div class="a-name">Valence</div><div class="a-val">.800</div></div>
+                <div class="alpha-fig good"><div class="a-name">Msg Volume</div><div class="a-val">.790</div></div>
+                <div class="alpha-fig"><div class="a-name">Analytical</div><div class="a-val">.693</div></div>
+                <div class="alpha-fig"><div class="a-name">Credibility</div><div class="a-val">.690</div></div>
+                <div class="alpha-fig"><div class="a-name">Authenticity</div><div class="a-val">.687</div></div>
+                <div class="alpha-fig"><div class="a-name">Persona</div><div class="a-val">.661</div></div>
+                <div class="alpha-fig"><div class="a-name">Product Eval</div><div class="a-val">.607</div></div>
+            </div>
+
+            <div style="display:flex;gap:24px;margin-top:12px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-3);">
+                <span><span style="color:var(--accent);font-weight:700;">●</span>&nbsp; ≥ .750 Excellent</span>
+                <span><span style="color:var(--ink);font-weight:700;">●</span>&nbsp; ≥ .600 Acceptable</span>
+            </div>
         </div>
     </div>
-    <div class="slide-num">11</div>
+
+    <div class="footer">
+        <span>From Human Buzz to Machine Hype · Wu · Cao · Wu · Hsieh</span>
+        <span class="pg">10 / 13</span>
+    </div>
 </section>
 
-<!-- ===== SLIDE 12 — Conclusion (from paper) ===== -->
+<!-- ===================================================================
+     SLIDE 11 — Statistical Methods
+     =================================================================== -->
 <section class="slide">
-    <span class="tag tag-purple">CONCLUSION</span>
-    <h2 class="section-title">A New Form Demanding <span class="accent">Its Own Analytical Lens</span></h2>
-    <div class="two-col" style="gap:44px;align-items:start;">
+    <div class="masthead">
+        <div class="left"><span class="pub">From Human Buzz to Machine Hype</span> &nbsp;·&nbsp; Part II · Method</div>
+        <div class="right"><span>Analysis Strategy</span><span>Statistical Methods</span></div>
+    </div>
+
+    <div class="section-label">Plate 11 — Analysis Strategy</div>
+    <h2 class="display">Statistical methods.</h2>
+
+    <div style="max-width:980px;">
+        <div class="pillar-row" style="border-top-color:var(--ink);border-top-width:2px;">
+            <div class="p-num">α</div>
+            <div>
+                <h4>Bivariate Pearson Correlations</h4>
+                <p>Assess pairwise correlations among the eight primary variables → identify the interconnected nature of message characteristics.</p>
+            </div>
+        </div>
+        <div class="pillar-row">
+            <div class="p-num">β</div>
+            <div>
+                <h4>Multiple Linear Regression</h4>
+                <p>Predict <strong>Authenticity</strong> → Originality (β = .46), Product Evaluation (β = .21), Valence (β = .12), Credibility (β = .12).</p>
+            </div>
+        </div>
+        <div class="pillar-row">
+            <div class="p-num">γ</div>
+            <div>
+                <h4>One-Way ANOVA</h4>
+                <p>Differences across the <strong>three sectors</strong> — Fashion / Beauty / 3C — on all eight variables.</p>
+            </div>
+        </div>
+
+        <div class="aside" style="margin-top:32px;border-left-color:var(--highlight);background:rgba(192,74,26,0.05);">
+            <span class="aside-label" style="color:var(--highlight);">Discussion Note — Contextual Data Mirroring</span>
+            Lower scores in Fashion and 3C reflect <em>real-world social media dynamics</em> — inherent market engagement benchmarks, <strong>not model limitations</strong>. The fine-tuned model faithfully mirrors the linguistic patterns of its target market.
+        </div>
+    </div>
+
+    <div class="footer">
+        <span>From Human Buzz to Machine Hype · Wu · Cao · Wu · Hsieh</span>
+        <span class="pg">11 / 13</span>
+    </div>
+</section>
+
+<!-- ===================================================================
+     SLIDE 12 — Conclusion
+     =================================================================== -->
+<section class="slide">
+    <div class="masthead">
+        <div class="left"><span class="pub">From Human Buzz to Machine Hype</span> &nbsp;·&nbsp; Part III · Conclusion</div>
+        <div class="right"><span>Conclusion</span><span>Key Takeaways</span></div>
+    </div>
+
+    <div class="section-label">Plate 12 — Conclusion</div>
+    <h2 class="display">A new form demanding <em>its own analytical lens.</em></h2>
+
+    <div class="grid-2-asym">
         <div>
-            <p class="body-text" style="margin-bottom:24px;">
+            <p class="lede dropcap">
                 Our findings <strong>refine eWOM theory</strong> by shifting attention from the <em>source of the message</em> to the <strong>communicative features within synthetic eWOM</strong> — offering new directions for both research and practice in AI-mediated marketing communication.
             </p>
-            <div class="highlight-box">
-                <p><strong>Authenticity</strong> in AI-generated content is shaped by <strong>originality, distinct persona, clear product evaluations, and perceived credibility</strong> — not by the identity of the communicator.</p>
+
+            <div class="aside">
+                <span class="aside-label">Authenticity Formation</span>
+                Authenticity in AI-generated content is shaped by <strong>originality, distinct persona, clear product evaluations,</strong> and <strong>perceived credibility</strong> — not by the identity of the communicator.
             </div>
-            <div class="highlight-box" style="border-left-color:#e74c3c;background:linear-gradient(135deg,rgba(231,76,60,0.06),rgba(231,76,60,0.02));">
-                <p><strong>Fashion sector salience:</strong> Persona construction and analytical thinking are particularly effective — fostering deeper engagement and enabling more nuanced messaging.</p>
+
+            <div class="aside" style="border-left-color:var(--highlight);background:rgba(192,74,26,0.05);">
+                <span class="aside-label" style="color:var(--highlight);">Fashion Sector Salience</span>
+                Persona construction and analytical thinking are particularly effective — fostering deeper engagement and enabling more nuanced messaging.
             </div>
         </div>
+
         <div>
-            <div style="background:linear-gradient(135deg,#1a1a2e,#0f3460);border-radius:18px;padding:36px;color:#fff;box-shadow:0 8px 32px rgba(26,26,46,0.2);">
-                <p style="font-size:14px;font-weight:700;letter-spacing:0.15em;color:rgba(255,255,255,0.45);margin-bottom:20px;">KEY TAKEAWAYS</p>
-                <div style="display:flex;flex-direction:column;gap:18px;">
-                    <div style="display:flex;gap:16px;align-items:flex-start;">
-                        <div style="width:40px;height:40px;border-radius:50%;background:rgba(108,99,255,0.25);display:flex;align-items:center;justify-content:center;font-weight:800;color:#a5a0ff;flex-shrink:0;">1</div>
-                        <p style="font-size:16px;line-height:1.55;">All 8 variables are <strong>positively correlated</strong> — synthetic communication is inherently interconnected.</p>
-                    </div>
-                    <div style="display:flex;gap:16px;align-items:flex-start;">
-                        <div style="width:40px;height:40px;border-radius:50%;background:rgba(108,99,255,0.25);display:flex;align-items:center;justify-content:center;font-weight:800;color:#a5a0ff;flex-shrink:0;">2</div>
-                        <p style="font-size:16px;line-height:1.55;"><strong>Originality + Persona (r = .57)</strong> jointly shape perceived authenticity in synthetic eWOM.</p>
-                    </div>
-                    <div style="display:flex;gap:16px;align-items:flex-start;">
-                        <div style="width:40px;height:40px;border-radius:50%;background:rgba(108,99,255,0.25);display:flex;align-items:center;justify-content:center;font-weight:800;color:#a5a0ff;flex-shrink:0;">3</div>
-                        <p style="font-size:16px;line-height:1.55;">Sector-level differences reflect <strong>market behavior</strong>, not model limitations — the model mirrors real engagement dynamics.</p>
-                    </div>
-                </div>
+            <h3 class="subhead">Key Takeaways</h3>
+            <hr class="rule-thick" style="margin:0 0 4px;">
+
+            <div class="takeaway">
+                <div class="t-num">i.</div>
+                <div class="t-body">All eight variables are <strong>positively correlated</strong> — synthetic communication is inherently interconnected.</div>
+            </div>
+            <div class="takeaway">
+                <div class="t-num">ii.</div>
+                <div class="t-body"><strong>Originality + Persona</strong> (r = .57) jointly shape perceived authenticity in synthetic eWOM.</div>
+            </div>
+            <div class="takeaway">
+                <div class="t-num">iii.</div>
+                <div class="t-body">Sector-level differences reflect <strong>market behavior</strong>, not model limitations — the model mirrors real engagement dynamics.</div>
             </div>
         </div>
     </div>
-    <div class="slide-num">12</div>
+
+    <div class="footer">
+        <span>From Human Buzz to Machine Hype · Wu · Cao · Wu · Hsieh</span>
+        <span class="pg">12 / 13</span>
+    </div>
 </section>
 
-<!-- ===== SLIDE 13 — Implications (Theory + Practice) ===== -->
+<!-- ===================================================================
+     SLIDE 13 — Implications
+     =================================================================== -->
 <section class="slide">
-    <span class="tag tag-green">IMPLICATIONS</span>
-    <h2 class="section-title">Implications for <span class="accent">Theory & Practice</span></h2>
-    <div class="two-col" style="gap:40px;">
+    <div class="masthead">
+        <div class="left"><span class="pub">From Human Buzz to Machine Hype</span> &nbsp;·&nbsp; Part III · Conclusion</div>
+        <div class="right"><span>Implications</span><span>Theory &amp; Practice</span></div>
+    </div>
+
+    <div class="section-label">Plate 13 — Implications</div>
+    <h2 class="display">Implications for <em>theory &amp; practice.</em></h2>
+
+    <div class="grid-2" style="gap:56px;">
         <div>
-            <p style="font-size:14px;font-weight:700;color:#6C63FF;text-transform:uppercase;letter-spacing:0.12em;margin-bottom:10px;">📚 Theoretical Implications</p>
-            <table class="impl-table">
+            <h3 class="subhead" style="color:var(--accent);">Theoretical Implications</h3>
+            <table class="editorial">
                 <thead>
-                    <tr class="theory-head"><th style="width:60px;text-align:center;">#</th><th>Contribution</th></tr>
+                    <tr><th style="width:36px;">№</th><th>Contribution</th></tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td>1</td>
+                        <td class="num-cell" style="color:var(--ink);">i.</td>
                         <td><strong>Authenticity is shaped by message qualities</strong>, not the communicator's identity — extending our understanding of authenticity formation in synthetic eWOM.</td>
                     </tr>
                     <tr>
-                        <td>2</td>
-                        <td><strong>Originality & Persona are interdependent</strong> — working together to shape how authentic AI-generated content appears to audiences.</td>
+                        <td class="num-cell" style="color:var(--ink);">ii.</td>
+                        <td><strong>Originality &amp; Persona are interdependent</strong> — working together to shape how authentic AI-generated content appears to audiences.</td>
                     </tr>
                     <tr>
-                        <td>3</td>
-                        <td><strong>Persona + Analytical Thinking</strong> contribute to theories of <strong>AI-mediated narrative</strong>, especially in fashion eWOM.</td>
+                        <td class="num-cell" style="color:var(--ink);">iii.</td>
+                        <td><strong>Persona &amp; Analytical Thinking</strong> contribute to theories of <strong>AI-mediated narrative</strong>, especially in fashion eWOM.</td>
                     </tr>
                 </tbody>
             </table>
         </div>
+
         <div>
-            <p style="font-size:14px;font-weight:700;color:#27ae60;text-transform:uppercase;letter-spacing:0.12em;margin-bottom:10px;">🎯 Practical Implications</p>
-            <table class="impl-table">
+            <h3 class="subhead" style="color:var(--highlight);">Practical Implications</h3>
+            <table class="editorial">
                 <thead>
-                    <tr class="practice-head"><th style="width:60px;text-align:center;">#</th><th>Action for Brands</th></tr>
+                    <tr><th style="width:36px;">№</th><th>Action for Brands</th></tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td>1</td>
-                        <td>Prioritize the <strong>four key drivers</strong>: <em>originality, product evaluation, valence, credibility</em> — to craft eWOM that resonates as genuine.</td>
+                        <td class="num-cell" style="color:var(--ink);">i.</td>
+                        <td>Prioritize the <strong>four key drivers</strong> — <em>originality, product evaluation, valence, credibility</em> — to craft eWOM that resonates as genuine.</td>
                     </tr>
                     <tr>
-                        <td>2</td>
+                        <td class="num-cell" style="color:var(--ink);">ii.</td>
                         <td>Develop <strong>distinctive personas</strong> with clear product evaluations and detailed information for effective consumer evaluation.</td>
                     </tr>
                     <tr>
-                        <td>3</td>
-                        <td><strong>Fashion brands</strong>: refine AI personas and deepen analytical content to differentiate and build stronger consumer connections.</td>
+                        <td class="num-cell" style="color:var(--ink);">iii.</td>
+                        <td><strong>Fashion brands</strong> — refine AI personas and deepen analytical content to differentiate and build stronger consumer connections.</td>
                     </tr>
                 </tbody>
             </table>
         </div>
     </div>
-    <div class="slide-num">13</div>
+
+    <hr class="rule" style="margin:36px 0 18px;">
+    <p class="cite" style="text-align:center;font-size:13px;color:var(--ink-3);">
+        Keywords — <em>Word-of-Mouth · eWOM · AI-generated eWOM · Authenticity · Persona · Fashion · Beauty · Synthetic Communication</em>
+    </p>
+
+    <div class="footer">
+        <span>From Human Buzz to Machine Hype · Wu · Cao · Wu · Hsieh</span>
+        <span class="pg">13 / 13</span>
+    </div>
 </section>
 
 </body>
